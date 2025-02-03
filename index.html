@@ -88,7 +88,7 @@
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                console.log(user);
+                localStorage.setItem('authenticatedUser', JSON.stringify(user));                
                 location.href = "file:///C:/Users/varun/OneDrive/Documents/9one_MVP/home.html";
             })
             .catch((error) => {
