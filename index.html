@@ -88,8 +88,8 @@
             .then((userCredential) => {
                 // Signed in 
                 const user = userCredential.user;
-                localStorage.setItem('authenticatedUser', JSON.stringify(user));                
-                location.href = "file:///C:/Users/varun/OneDrive/Documents/9one_MVP/home.html";
+                localStorage.setItem('authenticatedUser', JSON.stringify(user));
+                location.href = "file:///D:/Varun/Work/SourceCode/9one/home.html";
             })
             .catch((error) => {
                 const errorCode = error.code;
@@ -99,7 +99,7 @@
     });
 
     document.getElementById("signup-button").onclick = function () {
-        location.href = "file:///C:/Users/varun/OneDrive/Documents/9one_MVP/signup.html";
+        location.href = "file:///D:/Varun/Work/SourceCode/9one/signup.html";
     };
 
 </script>
@@ -111,7 +111,7 @@
     <h3>Login
     </h3>
 
-    <form action="" id="login-form">
+    <form id="login-form">
         <div class="container">
             <label for="email"><b>Email: </b></label>
             <input type="text" placeholder="Enter Email" name="email" id="email" required>
