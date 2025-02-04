@@ -12,7 +12,6 @@
     import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
 
     const userDeserialized = JSON.parse(localStorage.getItem('authenticatedUser'));
-    console.log(userDeserialized);
 
     // Your web app's Firebase configuration
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -37,7 +36,6 @@
     const q = query(collection(firestore, "users"), where("uid", "==", userDeserialized.uid));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async (doc) => {
-        console.log(doc.id, " => ", doc.data());
         const user = doc.data()
 
         // Set userName
@@ -58,14 +56,12 @@
 
         const userRef = doc.id;
         // Get user posts
-        const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.uid));
+        const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.uid).order);
         const userPostsQueryQuerySnapshot = await getDocs(userPostsQuery);
         userPostsQueryQuerySnapshot.forEach((_post) => {
-            console.log(_post.id, " => ", _post.data());
             const post = _post.data();
 
-            listHtml += `<li>${post.post_title}<br/><img src="${post.post_image_path}"
-        id='user-display-picture' width="40%" height="40%"/><br/>${post.up_count} Ups - ${post.down_count} Downs</li>`;
+            listHtml += `<li>${post.post_title}<br/><img src="${post.post_image_path}"id='user-display-picture' width="40%" height="40%"/><br/>${post.up_count} Ups - ${post.down_count} Downs</li>`;
 
             document.getElementById("my-posts-list").innerHTML = listHtml;
         });
@@ -122,6 +118,7 @@
     showHideTabs(1);
 
     var uploadPostBase64 = "";
+    var uploadPostBytes = "";
     var selectedFileName = "";
     var postFileName = "";
     document.getElementById('upload-post-image-file-selector').addEventListener('change', function () {
@@ -149,10 +146,14 @@
         // Create a storage reference from our storage service
         postFileName = userDeserialized.uid + "_" + new Date().getTime() + "_" + selectedFileName;
         const postImagesRef = ref(storage, "post_images/" + postFileName);
-        const metadata = {
-            contentType: 'image/jpeg',
-        };
-        const uploadTask = uploadBytesResumable(postImagesRef, new TextEncoder().encode(uploadPostBase64), metadata)
+        // const metadata = {
+        //     contentType: 'image/jpeg',
+        // };
+
+        debugger;
+        uploadPostBytes = base64ToArrayBuffer(uploadPostBase64.split(",")[1]);
+
+        const uploadTask = uploadBytesResumable(postImagesRef, uploadPostBytes) // uploadPostBase64, metadata
         uploadTask.on('state_changed',
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
@@ -173,18 +174,27 @@
                 getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
                     console.log('File available at', downloadURL);
                     const postTitle = document.getElementById('upload-post-title').value;
-                    debugger;
                     await setDoc(doc(firestore, "posts", postFileName), {
                         created_by: userDeserialized.uid,
                         post_image_path: downloadURL,
                         post_title: postTitle,
                         down_count: 0,
                         up_count: 0
-                    }).then((setPost) => { console.log("Post uploaded successfully - " + setPost) }).catch((error) => { console.log(error) });
+                    }).then((setPost) => { console.log("Post uploaded successfully."); showHideTabs(1); }).catch((error) => { console.log(error) });
                 });
             }
         );
     });
+
+    // https://stackoverflow.com/a/21797381/2776913
+    function base64ToArrayBuffer(base64) {
+        var binaryString = atob(base64);
+        var bytes = new Uint8Array(binaryString.length);
+        for (var i = 0; i < binaryString.length; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+        return bytes.buffer;
+    }
 </script>
 
 <body>
