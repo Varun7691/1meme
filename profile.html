@@ -28,17 +28,16 @@
 
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
-
     // Auth
     const auth = getAuth(app);
+    // Firestore
+    const firestore = getFirestore(app, "nineone");
+
+
     onAuthStateChanged(auth, async (_user) => {
         if (_user) {
             user = _user;
 
-            // Firestore
-            const firestore = getFirestore(app, "nineone");
-
-            var listHtml = "";
             // Get user data
             const q = query(collection(firestore, "users"), where("uid", "==", user.uid));
             const querySnapshot = await getDocs(q);
@@ -62,8 +61,11 @@
                 document.getElementById("active-since").innerHTML = "Active for: " + diffDays + " day(s)";
 
                 const userRef = doc.id;
+
+                var listHtml = "";
+
                 // Get user posts
-                const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.uid).order);
+                const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.uid));
                 const userPostsQueryQuerySnapshot = await getDocs(userPostsQuery);
                 userPostsQueryQuerySnapshot.forEach((_post) => {
                     const post = _post.data();
@@ -213,9 +215,13 @@
         });
     })
 
+    document.getElementById('profile-home-button').addEventListener('click',
+        function(){location.href = "file:///C:/Users/varun/OneDrive/Documents/9one_MVP/home.html"}
+    )
 </script>
 
 <body>
+    <button id='profile-home-button'>Home</button>
     <img src="https://firebasestorage.googleapis.com/v0/b/one-5769e.firebasestorage.app/o/user_placeholder.jpg?alt=media&token=356c6aa7-a290-4167-a0c6-e9f72bef8909"
         id='user-display-picture' width="20%" height="20%" />
     <br />
@@ -227,7 +233,7 @@
     <br />
     <br />
     <button id='my-posts-button'>My Posts</button>
-    <button id='my-comments-button'>Saved</button>
+    <button id='my-comments-button' style="display: none;">Saved</button>
     <button id='my-upvotes-button'>My Upvotes</button>
     <button id='upload-posts-button'>Upload Post</button>
 

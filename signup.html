@@ -9,7 +9,8 @@
 
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, validatePassword,sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js"
+    import { getAuth, createUserWithEmailAndPassword, validatePassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js"
+    import { getFirestore, getDocs, collection, query, where, setDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
     // Your web app's Firebase configuration
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
@@ -27,6 +28,8 @@
     // Auth
     const auth = getAuth(app);
 
+    // Firestore
+    const firestore = getFirestore(app, "nineone");
 
     // Signup
     const form = document.getElementById('signup-form');
@@ -53,17 +56,27 @@
             const status = await validatePassword(auth, password.value);
             if (status.isValid) {
                 createUserWithEmailAndPassword(auth, email.value, password.value)
-                    .then((userCredential) => {
+                    .then(async (userCredential) => {
                         // Signed in 
                         const user = userCredential.user;
                         console.log(user);
 
+                        await setDoc(doc(firestore, "users", user.email), {
+                            display_picture: "https://firebasestorage.googleapis.com/v0/b/one-5769e.firebasestorage.app/o/user_placeholder.jpg?alt=media&token=356c6aa7-a290-4167-a0c6-e9f72bef8909",
+                            email: user.email,
+                            profile_description: "",
+                            uid: user.uid,
+                            userName: user.email.split('@')[0],
+                            createdOn: Timestamp.fromDate(new Date())
+                        }).then((setPost) => {
+                            console.log("User added successfully.");
+                            location.href = "file:///C:/Users/varun/OneDrive/Documents/9one_MVP/home.html";
+                        }).catch((error) => { console.log(error) });
 
                         sendEmailVerification(user)
                             .then(() => {
                                 // Email verification sent!
                                 let msg = 'An email verification link has been sent to ' + user.email;
-                                alert(msg);
                             });
                     })
                     .catch((error) => {
@@ -83,7 +96,7 @@
 <body>
     <h1>9one
     </h1>
-    
+
     <h3>Sign Up
     </h3>
 
@@ -96,7 +109,7 @@
             <label for="password"><b>Password: </b></label>
             <input type="password" placeholder="Enter Password" name="password" id="password" required>
             <br />
-            <br />            
+            <br />
             <button type="submit">Sign Up</button>
             <button type="button" class="cancelbtn">Cancel</button>
         </div>
