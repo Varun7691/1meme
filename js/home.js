@@ -75,15 +75,69 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
             console.log(this.id);
             onAuthStateChanged(auth, async (_user) => {
                 if (_user) {
-                    user = _user;
-                    await updateDoc(doc(firestore, "posts", _post.id), {
-                        up_count: post.up_count + 1,
-                    }).then(async () => {
-                        var updatedPost = await getDoc(doc(firestore, "posts", _post.id));
-                        upButton.textContent = updatedPost.data().up_count + " Ups";
-                        console.log(this.id + " - Up count updated Successfully");
+                    console.log(_user);
+                    await getDoc(doc(firestore, "users", _user.email)).then(async (_usersDocument) => {
+                        user = _usersDocument.data();
+                        var isPostUpVoted = false;
+                        for (let i = 0; i < user.up_posts.length; i++) {
+                            if (_post.id === user.up_posts[i]) {
+                                isPostUpVoted = true
+                            }
+                        }
+                        
+                        debugger;
+                        if (isPostUpVoted === true) {
+                            debugger;
+                            await updateDoc(doc(firestore, "posts", _post.id), {
+                                up_count: post.up_count - 1,
+                            }).then(async () => {
+                                await updateDoc(doc(firestore, "users", _user.email), {
+                                    up_posts: user.up_posts.splice(user.up_posts.indexOf(_post.id), 1)
+                                }).then(async () => {
+                                    console.log(user.up_posts.length + " - UpVote successfully updated for user");
+                                    await getDoc(doc(firestore, "posts", _post.id)).then((_updatedPost) => {
+                                        upButton.textContent = _pdatedPost.data().up_count + " Ups";
+                                        console.log(this.id + " - Up count updated Successfully");
+                                    }).catch((error) => {
+                                        console.log("Could not get post after upvote update - " + error);
+                                    });
+                                }).catch((error) => {
+                                    console.log("Could not update up_post for user - " + error);
+                                });
+                            }).catch((error) => {
+                                console.log("Could not update upvote on post - " + error);
+                            });
+
+                        } else {
+                            debugger;
+                            await updateDoc(doc(firestore, "posts", _post.id), {
+                                up_count: post.up_count + 1,
+                            }).then(async () => {
+                                debugger;
+                                console.log("UpCount updated successfully");
+                                await updateDoc(doc(firestore, "users", _user.email), {
+                                    up_posts: user.up_posts.push(_post.id)
+                                }).then(async () => {
+                                    debugger;
+                                    console.log(user.up_posts.length + " - UpVote successfully updated for user");
+                                    await getDoc(doc(firestore, "posts", _post.id))
+                                        .then((_updatedPost) => {
+                                            debugger;
+                                            upButton.textContent = _updatedPost.data().up_count + " Ups";
+                                            console.log(this.id + " - Up count updated Successfully");
+                                        }).catch((error) => {
+                                            console.log("Could not get post after upvote update - " + error);
+                                        });
+                                }).catch((error) => {
+                                    console.log("Could not update up_post for user - " + error);
+                                });
+                            }).catch((error) => {
+                                console.log("Could not update upvote on post - " + error);
+                            });
+                        }
+
                     }).catch((error) => {
-                        console.log(error);
+                        console.log("Could not fetch user - " + error);
                     });
                 } else {
                     console.log("onAuthStateChanged - User Signed out");

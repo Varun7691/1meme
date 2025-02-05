@@ -28,13 +28,12 @@ const firestore = getFirestore(app, "nineone");
 onAuthStateChanged(auth, async (_user) => {
     if (_user) {
         user = _user;
-
         // Get user data
         const q = query(collection(firestore, "users"), where("uid", "==", user.uid));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach(async (doc) => {
-            const user = doc.data()
-
+            const user = doc.data();
+            
             // Set userName
             document.getElementById("welcome-user").innerHTML = user.userName;
 
