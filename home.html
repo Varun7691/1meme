@@ -6,72 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>9one</title>
 </head>
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-    import { getFirestore, getDocs, collection, query, where, setDoc, doc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
-
-    // Your web app's Firebase configuration
-    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-        apiKey: "AIzaSyBfBXlbUUWygLra3FdkbaMoX5PEaHAvxmg",
-        authDomain: "one-5769e.firebaseapp.com",
-        projectId: "one-5769e",
-        storageBucket: "one-5769e.firebasestorage.app",
-        messagingSenderId: "851668219021",
-        appId: "1:851668219021:web:da67de784fd13188655ec4",
-        measurementId: "G-ZEVQ84F4B0"
-    };
-
-    // Initialize Firebase
-    const app = initializeApp(firebaseConfig);
-
-    // Auth - user
-    const auth = getAuth(app);
-    // var user = "";
-
-    // onAuthStateChanged(auth, async (_user) => {
-    //     if (_user) {
-    //         user = _user;
-    //     } else {
-    //         console.log("onAuthStateChanged - User Signed out");
-    //         location.href = "file:///C:/Users/varun/OneDrive/Documents/9one_MVP/index.html";
-    //     }
-    // });
-
-    // Firestore
-
-
-    var listHtml = "";
-    const firestore = getFirestore(app, "nineone");
-
-    const allPostsQuery = query(collection(firestore, "posts"));
-    const allPostsQueryQuerySnapshot = await getDocs(allPostsQuery);
-    allPostsQueryQuerySnapshot.forEach((_post) => {
-        const post = _post.data();
-
-        listHtml += `<li><h2>${post.post_title}</h2><br/><img src="${post.post_image_path}"id='user-display-picture' width="10%" height="10%"/><br/>${post.up_count} Ups - ${post.down_count} Downs</li>`;
-
-        document.getElementById("all-posts-list").innerHTML = listHtml;
-    });
-
-    document.getElementById('profile-sign-out').addEventListener('click', function () {
-        signOut(auth).then(() => {
-            location.href = "file:///C:/Users/varun/OneDrive/Documents/9one_MVP/index.html";
-        }).catch((error) => {
-            console.log(error);
-        });
-    })
-</script>
+<script type="module" src="js/home.js"></script>
+<link rel="stylesheet" href="css/9one.css" />
 
 <body>
-    <h3>Welcome!</h3>
-    <a href="file:///C:/Users/varun/OneDrive/Documents/9one_MVP/profile.html">Profile</a>
-    <button id='profile-sign-out'>Sign Out</button>
-    <h1>All posts</h1>
-    <ul id="all-posts-list">
-        <li>No results</li>
-    </ul>
+    <div class="grid-container">
+        <div><a href="profile.html">Profile</a></div>
+        <div>
+            <h1>9one</h1>
+        </div>
+        <div><button id='profile-sign-out'>Sign Out</button></div>
+    </div>
+    <h2>All posts</h2>
+    <label id="all-post-loading">Loading...</label>
+    <ul id="all-posts-list"></ul>
 </body>
 
 </html>
