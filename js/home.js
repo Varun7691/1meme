@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, setDoc, doc, orderBy, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+import { getFirestore, getDocs, collection, query, where, setDoc, doc, orderBy, updateDoc, getDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
 // Your web app's Firebase configuration
@@ -30,7 +30,7 @@ let br = document.createElement("br");
 const allPostsQuery = query(collection(firestore, "posts"), orderBy("created_on", "desc"));
 const allPostsQueryQuerySnapshot = await getDocs(allPostsQuery);
 allPostsQueryQuerySnapshot.forEach(async (_post) => {
-    const post = _post.data();
+    var post = _post.data();
 
     let li = document.createElement("li");
 
@@ -84,19 +84,18 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 isPostUpVoted = true
                             }
                         }
-                        
-                        debugger;
+
                         if (isPostUpVoted === true) {
-                            debugger;
                             await updateDoc(doc(firestore, "posts", _post.id), {
                                 up_count: post.up_count - 1,
                             }).then(async () => {
                                 await updateDoc(doc(firestore, "users", _user.email), {
-                                    up_posts: user.up_posts.splice(user.up_posts.indexOf(_post.id), 1)
+                                    up_posts: arrayRemove(_post.id)
                                 }).then(async () => {
                                     console.log(user.up_posts.length + " - UpVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id)).then((_updatedPost) => {
-                                        upButton.textContent = _pdatedPost.data().up_count + " Ups";
+                                        post = _updatedPost.data();
+                                        upButton.textContent = _updatedPost.data().up_count + " Ups";
                                         console.log(this.id + " - Up count updated Successfully");
                                     }).catch((error) => {
                                         console.log("Could not get post after upvote update - " + error);
@@ -109,20 +108,17 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                             });
 
                         } else {
-                            debugger;
                             await updateDoc(doc(firestore, "posts", _post.id), {
                                 up_count: post.up_count + 1,
                             }).then(async () => {
-                                debugger;
-                                console.log("UpCount updated successfully");
+                                console.log("UpCount updated successfully");                            
                                 await updateDoc(doc(firestore, "users", _user.email), {
-                                    up_posts: user.up_posts.push(_post.id)
+                                    up_posts: arrayUnion(_post.id)
                                 }).then(async () => {
-                                    debugger;
                                     console.log(user.up_posts.length + " - UpVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id))
                                         .then((_updatedPost) => {
-                                            debugger;
+                                            post = _updatedPost.data();
                                             upButton.textContent = _updatedPost.data().up_count + " Ups";
                                             console.log(this.id + " - Up count updated Successfully");
                                         }).catch((error) => {
@@ -135,7 +131,6 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 console.log("Could not update upvote on post - " + error);
                             });
                         }
-
                     }).catch((error) => {
                         console.log("Could not fetch user - " + error);
                     });
@@ -151,15 +146,62 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
 
             onAuthStateChanged(auth, async (_user) => {
                 if (_user) {
-                    user = _user;
-                    await updateDoc(doc(firestore, "posts", _post.id), {
-                        down_count: post.down_count + 1,
-                    }).then(async () => {
-                        var updatedPost = await getDoc(doc(firestore, "posts", _post.id));
-                        downButton.textContent = updatedPost.data().down_count + " Downs";
-                        console.log(this.id + " - down count updated Successfully");
+                    await getDoc(doc(firestore, "users", _user.email)).then(async (_usersDocument) => {
+                        user = _usersDocument.data();
+                        var isPostDownVoted = false;
+                        for (let i = 0; i < user.down_posts.length; i++) {
+                            if (_post.id === user.down_posts[i]) {
+                                isPostDownVoted = true
+                            }
+                        }
+
+                        if (isPostDownVoted === true) {
+                            await updateDoc(doc(firestore, "posts", _post.id), {
+                                down_count: post.down_count - 1,
+                            }).then(async () => {
+                                await updateDoc(doc(firestore, "users", _user.email), {
+                                    down_posts: arrayRemove(_post.id)
+                                }).then(async () => {
+                                    console.log(user.down_posts.length + " - DownVote successfully updated for user");
+                                    await getDoc(doc(firestore, "posts", _post.id)).then((_updatedPost) => {
+                                        post = _updatedPost.data();
+                                        downButton.textContent = _updatedPost.data().down_count + " Downs";
+                                        console.log(this.id + " - Down count updated Successfully");
+                                    }).catch((error) => {
+                                        console.log("Could not get post after upvote update - " + error);
+                                    });
+                                }).catch((error) => {
+                                    console.log("Could not update up_post for user - " + error);
+                                });
+                            }).catch((error) => {
+                                console.log("Could not update upvote on post - " + error);
+                            });
+
+                        } else {
+                            await updateDoc(doc(firestore, "posts", _post.id), {
+                                down_count: post.down_count + 1,
+                            }).then(async () => {                                
+                                await updateDoc(doc(firestore, "users", _user.email), {
+                                    down_posts: arrayUnion(_post.id)
+                                }).then(async () => {
+                                    console.log(user.down_posts.length + " - DownVote successfully updated for user");
+                                    await getDoc(doc(firestore, "posts", _post.id))
+                                        .then((_updatedPost) => {
+                                            post = _updatedPost.data();
+                                            downButton.textContent = _updatedPost.data().down_count + " Downs";
+                                            console.log(this.id + " - Down count updated Successfully");
+                                        }).catch((error) => {
+                                            console.log("Could not get post after upvote update - " + error);
+                                        });
+                                }).catch((error) => {
+                                    console.log("Could not update up_post for user - " + error);
+                                });
+                            }).catch((error) => {
+                                console.log("Could not update upvote on post - " + error);
+                            });
+                        }
                     }).catch((error) => {
-                        console.log(error);
+                        console.log("Could not fetch user - " + error);
                     });
                 } else {
                     console.log("onAuthStateChanged - User Signed out");
@@ -168,6 +210,27 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
             });
         });
 
+        // downButton.addEventListener("click", async function () {
+        //     console.log(this.id);
+
+        //     onAuthStateChanged(auth, async (_user) => {
+        //         if (_user) {
+        //             user = _user;
+        //             await updateDoc(doc(firestore, "posts", _post.id), {
+        //                 down_count: post.down_count + 1,
+        //             }).then(async () => {
+        //                 var updatedPost = await getDoc(doc(firestore, "posts", _post.id));
+        //                 downButton.textContent = updatedPost.data().down_count + " Downs";
+        //                 console.log(this.id + " - down count updated Successfully");
+        //             }).catch((error) => {
+        //                 console.log(error);
+        //             });
+        //         } else {
+        //             console.log("onAuthStateChanged - User Signed out");
+        //             location.href = "index.html";
+        //         }
+        //     });
+        // });
     });
     document.getElementById("all-posts-list").append(li);
     // Hiding the loading label
