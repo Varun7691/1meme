@@ -82,7 +82,6 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                 });
             } else {
                 console.log("onAuthStateChanged - User Signed out");
-                location.href = "index.html";
             }
         });
 
@@ -109,19 +108,19 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 isPostUpVoted = true
                             }
                         }
-                        debugger;
+                        
                         if (isPostUpVoted === true) {
                             await updateDoc(doc(firestore, "posts", _post.id), {
                                 up_count: post.up_count - 1,
                             }).then(async () => {
-                                debugger;
+                                
                                 await updateDoc(doc(firestore, "users", _user.email), {
                                     up_posts: arrayRemove(_post.id)
                                 }).then(async () => {
-                                    debugger;
+                                    
                                     console.log(user.up_posts.length + " - UpVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id)).then((_updatedPost) => {
-                                        debugger;
+                                        
                                         post = _updatedPost.data();
                                         upButton.textContent = _updatedPost.data().up_count + " Ups";
                                         upButton.setAttribute("class", "unselected");
@@ -136,7 +135,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                             });
 
                         } else {
-                            debugger;
+                            
                             var downCount = post.down_count;
                             for (let i = 0; i < user.down_posts.length; i++) {
                                 if (_post.id === user.down_posts[i]) {
@@ -147,17 +146,17 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 up_count: post.up_count + 1,
                                 down_count: downCount
                             }).then(async () => {
-                                debugger;
+                                
                                 console.log("UpCount updated successfully");
                                 await updateDoc(doc(firestore, "users", _user.email), {
                                     up_posts: arrayUnion(_post.id),
                                     down_posts: arrayRemove(_post.id)
                                 }).then(async () => {
-                                    debugger;
+                                    
                                     console.log(user.up_posts.length + " - UpVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id))
                                         .then((_updatedPost) => {
-                                            debugger;
+                                            
                                             post = _updatedPost.data();
                                             upButton.textContent = _updatedPost.data().up_count + " Ups";
                                             downButton.textContent = _updatedPost.data().down_count + " Downs";
@@ -195,19 +194,19 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 isPostDownVoted = true
                             }
                         }
-                        debugger;
+                        
                         if (isPostDownVoted === true) {
                             await updateDoc(doc(firestore, "posts", _post.id), {
                                 down_count: post.down_count - 1,
                             }).then(async () => {
-                                debugger;
+                                
                                 await updateDoc(doc(firestore, "users", _user.email), {
                                     down_posts: arrayRemove(_post.id)
                                 }).then(async () => {
-                                    debugger;
+                                    
                                     console.log(user.down_posts.length + " - DownVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id)).then((_updatedPost) => {
-                                        debugger;
+                                        
                                         post = _updatedPost.data();
                                         downButton.textContent = _updatedPost.data().down_count + " Downs";
 
@@ -223,7 +222,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                             });
 
                         } else {
-                            debugger;
+                            
                             var upCount = post.up_count;
                             for (let i = 0; i < user.up_posts.length; i++) {
                                 if (_post.id === user.up_posts[i]) {
@@ -234,16 +233,16 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 down_count: post.down_count + 1,
                                 up_count: upCount
                             }).then(async () => {
-                                debugger;
+                                
                                 await updateDoc(doc(firestore, "users", _user.email), {
                                     down_posts: arrayUnion(_post.id),
                                     up_posts: arrayRemove(_post.id)
                                 }).then(async () => {
-                                    debugger;
+                                    
                                     console.log(user.down_posts.length + " - DownVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id))
                                         .then((_updatedPost) => {
-                                            debugger;
+                                            
                                             post = _updatedPost.data();
                                             downButton.textContent = _updatedPost.data().down_count + " Downs";
                                             upButton.textContent = _updatedPost.data().up_count + " Ups";
