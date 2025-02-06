@@ -108,6 +108,7 @@ function showHideTabs(containerNumber) {
             uploadPostsContainer.style.display = "none";
             break;
         case 4:
+            console.log(user);
             myPostsContainer.style.display = "none";
             myCommentsContainer.style.display = "none";
             myUpvotesContainer.style.display = "none";
@@ -144,47 +145,51 @@ const uploadForm = document.getElementById('upload-post-form');
 uploadForm.addEventListener('submit', function (event) {
     event.preventDefault();
 
-    // Storage
-    const storage = getStorage(app);
+    if (user.emailVerified) {
+        // Storage
+        const storage = getStorage(app);
 
-    // Create a storage reference from our storage service
-    postFileName = user.uid + "_" + new Date().getTime() + "_" + selectedFileName;
-    const postImagesRef = ref(storage, "post_images/" + postFileName);
+        // Create a storage reference from our storage service
+        postFileName = user.uid + "_" + new Date().getTime() + "_" + selectedFileName;
+        const postImagesRef = ref(storage, "post_images/" + postFileName);
 
-    var uploadPostBytes = base64ToArrayBuffer(uploadPostBase64.split(",")[1]);
+        var uploadPostBytes = base64ToArrayBuffer(uploadPostBase64.split(",")[1]);
 
-    const uploadTask = uploadBytesResumable(postImagesRef, uploadPostBytes) // uploadPostBase64, metadata
-    uploadTask.on('state_changed',
-        (snapshot) => {
-            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-            console.log('Upload is ' + progress + '% done');
-            switch (snapshot.state) {
-                case 'paused':
-                    console.log('Upload is paused');
-                    break;
-                case 'running':
-                    console.log('Upload is running');
-                    break;
+        const uploadTask = uploadBytesResumable(postImagesRef, uploadPostBytes) // uploadPostBase64, metadata
+        uploadTask.on('state_changed',
+            (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                    case 'paused':
+                        console.log('Upload is paused');
+                        break;
+                    case 'running':
+                        console.log('Upload is running');
+                        break;
+                }
+            },
+            (error) => {
+                console.log('Upload failed');
+            },
+            () => {
+                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                    console.log('File available at', downloadURL);
+                    const postTitle = document.getElementById('upload-post-title').value;
+                    await setDoc(doc(firestore, "posts", postFileName), {
+                        created_by: user.email,
+                        post_image_path: downloadURL,
+                        post_title: postTitle,
+                        down_count: 0,
+                        up_count: 0,
+                        created_on: Timestamp.fromDate(new Date())
+                    }).then((setPost) => { console.log("Post uploaded successfully."); location.reload(); }).catch((error) => { console.log(error) });
+                });
             }
-        },
-        (error) => {
-            console.log('Upload failed');
-        },
-        () => {
-            getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                console.log('File available at', downloadURL);
-                const postTitle = document.getElementById('upload-post-title').value;
-                await setDoc(doc(firestore, "posts", postFileName), {
-                    created_by: user.email,
-                    post_image_path: downloadURL,
-                    post_title: postTitle,
-                    down_count: 0,
-                    up_count: 0,
-                    created_on: Timestamp.fromDate(new Date())
-                }).then((setPost) => { console.log("Post uploaded successfully."); location.reload(); }).catch((error) => { console.log(error) });
-            });
-        }
-    );
+        );
+    } else {
+        alert("Pleaes verify your email before uploading.");
+    }
 });
 
 // https://stackoverflow.com/a/21797381/2776913
