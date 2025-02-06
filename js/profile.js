@@ -55,7 +55,7 @@ onAuthStateChanged(auth, async (_user) => {
             var listHtml = "";
 
             // Get user posts
-            const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.uid));
+            const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.email));
             const userPostsQueryQuerySnapshot = await getDocs(userPostsQuery);
             userPostsQueryQuerySnapshot.forEach((_post) => {
                 const post = _post.data();

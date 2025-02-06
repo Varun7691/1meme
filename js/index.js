@@ -30,7 +30,6 @@ const password = document.getElementById('password');
 form.addEventListener('submit', function (event) {
     event.preventDefault();
 
-    debugger;
     signInWithEmailAndPassword(auth, email.value.trim(), password.value.trim())
         .then((userCredential) => {
             // Signed in 
