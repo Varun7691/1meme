@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, setDoc, doc, Timestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+import { getFirestore, getDocs, collection, query, where, setDoc, doc, Timestamp, orderBy } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
@@ -33,7 +33,7 @@ onAuthStateChanged(auth, async (_user) => {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach(async (doc) => {
             const user = doc.data();
-            
+
             // Set userName
             document.getElementById("welcome-user").innerHTML = user.userName;
 
@@ -55,7 +55,7 @@ onAuthStateChanged(auth, async (_user) => {
             var listHtml = "";
 
             // Get user posts
-            const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.email));
+            const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.email), orderBy("created_on", "desc"));
             const userPostsQueryQuerySnapshot = await getDocs(userPostsQuery);
             userPostsQueryQuerySnapshot.forEach((_post) => {
                 const post = _post.data();
