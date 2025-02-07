@@ -144,6 +144,8 @@ uploadForm.addEventListener('submit', async function (event) {
     if (user.emailVerified) {
         await getDoc(doc(firestore, "users", user.email)).then((_userDocument) => {
             console.log(_userDocument.data().last_uploaded);
+
+            //https://stackoverflow.com/a/7709819
             const oldDate = _userDocument.data().last_uploaded.toDate();
             const newDate = new Date();
             const diffTime = Math.abs(oldDate - newDate);
