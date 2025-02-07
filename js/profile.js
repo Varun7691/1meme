@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, setDoc, doc, Timestamp, orderBy } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+import { getFirestore, getDocs, collection, query, where, setDoc, doc, Timestamp, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
@@ -49,8 +49,6 @@ onAuthStateChanged(auth, async (_user) => {
             const diffTime = Math.abs(oldDate - newDate);
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             document.getElementById("active-since").innerHTML = "Active for: " + diffDays + " day(s)";
-
-            const userRef = doc.id;
 
             var listHtml = "";
 
@@ -108,7 +106,6 @@ function showHideTabs(containerNumber) {
             uploadPostsContainer.style.display = "none";
             break;
         case 4:
-            console.log(user);
             myPostsContainer.style.display = "none";
             myCommentsContainer.style.display = "none";
             myUpvotesContainer.style.display = "none";
@@ -135,58 +132,84 @@ document.getElementById('upload-post-image-file-selector').addEventListener('cha
         uploadPostBase64 = event.target.result;
         document.getElementById('upload-post-image-preview').src = uploadPostBase64;
         document.getElementById('upload-post-image-preview').style.display = 'block';
-        console.log(uploadPostBase64);
     };
 
     reader.readAsDataURL(file);
 });
 
 const uploadForm = document.getElementById('upload-post-form');
-uploadForm.addEventListener('submit', function (event) {
+uploadForm.addEventListener('submit', async function (event) {
     event.preventDefault();
 
     if (user.emailVerified) {
-        // Storage
-        const storage = getStorage(app);
+        await getDoc(doc(firestore, "users", user.email)).then((_userDocument) => {
+            console.log(_userDocument.data().last_uploaded);
+            const oldDate = _userDocument.data().last_uploaded.toDate();
+            const newDate = new Date();
+            const diffTime = Math.abs(oldDate - newDate);
+            var diffDays = Math.floor(diffTime / 86400000); // days
+            var diffHrs = Math.floor((diffTime % 86400000) / 3600000); // hours
+            var diffMins = Math.round(((diffTime % 86400000) % 3600000) / 60000); // minutes
+            console.log(diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes");
+            if (diffMins > 15) {
+                // Storage
+                const storage = getStorage(app);
 
-        // Create a storage reference from our storage service
-        postFileName = user.uid + "_" + new Date().getTime() + "_" + selectedFileName;
-        const postImagesRef = ref(storage, "post_images/" + postFileName);
+                // Create a storage reference from our storage service
+                postFileName = user.uid + "_" + new Date().getTime() + "_" + selectedFileName;
+                const postImagesRef = ref(storage, "post_images/" + postFileName);
 
-        var uploadPostBytes = base64ToArrayBuffer(uploadPostBase64.split(",")[1]);
+                var uploadPostBytes = base64ToArrayBuffer(uploadPostBase64.split(",")[1]);
 
-        const uploadTask = uploadBytesResumable(postImagesRef, uploadPostBytes) // uploadPostBase64, metadata
-        uploadTask.on('state_changed',
-            (snapshot) => {
-                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                console.log('Upload is ' + progress + '% done');
-                switch (snapshot.state) {
-                    case 'paused':
-                        console.log('Upload is paused');
-                        break;
-                    case 'running':
-                        console.log('Upload is running');
-                        break;
-                }
-            },
-            (error) => {
-                console.log('Upload failed');
-            },
-            () => {
-                getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
-                    console.log('File available at', downloadURL);
-                    const postTitle = document.getElementById('upload-post-title').value;
-                    await setDoc(doc(firestore, "posts", postFileName), {
-                        created_by: user.email,
-                        post_image_path: downloadURL,
-                        post_title: postTitle,
-                        down_count: 0,
-                        up_count: 0,
-                        created_on: Timestamp.fromDate(new Date())
-                    }).then((setPost) => { console.log("Post uploaded successfully."); location.reload(); }).catch((error) => { console.log(error) });
-                });
+                const uploadTask = uploadBytesResumable(postImagesRef, uploadPostBytes) // uploadPostBase64, metadata
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        console.log('Upload is ' + progress + '% done');
+                        switch (snapshot.state) {
+                            case 'paused':
+                                console.log('Upload is paused');
+                                break;
+                            case 'running':
+                                console.log('Upload is running');
+                                break;
+                        }
+                    },
+                    (error) => {
+                        console.log('Upload failed' + error);
+                    },
+                    () => {
+                        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+                            console.log('File available at', downloadURL);
+                            const postTitle = document.getElementById('upload-post-title').value;
+                            await setDoc(doc(firestore, "posts", postFileName), {
+                                created_by: user.email,
+                                post_image_path: downloadURL,
+                                post_title: postTitle,
+                                down_count: 0,
+                                up_count: 0,
+                                created_on: Timestamp.fromDate(new Date())
+                            }).then(async (setPost) => {
+                                console.log("Post uploaded successfully.");
+                                location.reload();
+                                await updateDoc(doc(firestore, "users", user.email), {
+                                    last_uploaded: Timestamp.fromDate(new Date())
+                                }).then((_updatedUser) => {
+                                    console.log("Last Uploaded time updated successfully - " + _updatedUser.date().last_uploaded);
+                                }).catch((error) => {
+                                    console.log(error);
+                                });
+                            }).catch((error) => { console.log(error) });
+                        });
+                    }
+                );
+            } else {
+                alert("Please wait for an hour before uploading again.");
             }
-        );
+
+        }).catch((error) => {
+            console.log('Check last upload time - fetch user - ' + error);
+        });
     } else {
         alert("Pleaes verify your email before uploading.");
     }
