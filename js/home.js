@@ -39,13 +39,17 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
     userQueryQuerySnapshot.forEach((_user) => {
         postUser = _user.data();
 
+        let postUsernameContainer = document.createElement("div");
         let postUsernameLabel = document.createElement("label");
+        let postTitleContainer = document.createElement("div");
         let postTitleLabel = document.createElement("label");
         let postImage = document.createElement("img");
-        let upButton = document.createElement("button");
-        let downButton = document.createElement("button");
 
-        postUsernameLabel.textContent = " - " + postUser.userName;
+        let voteContainer = document.createElement("div");
+        let upButton = document.createElement("label");
+        let downButton = document.createElement("label");
+
+        postUsernameLabel.textContent = postUser.userName;
         postUsernameLabel.className = "post-username";
         postTitleLabel.textContent = post.post_title;
         postTitleLabel.className = "post-title";
@@ -85,16 +89,24 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
             }
         });
 
-        li.append(postTitleLabel);
-        li.append(postUsernameLabel);
-        li.append(br.cloneNode(true));
-        li.append(br.cloneNode(true));
+        postTitleContainer.append(postTitleLabel);
+        postTitleContainer.setAttribute("class","post-title-container");
+        postTitleLabel.setAttribute("class","post-title");
+
+        postUsernameContainer.append(postUsernameLabel);
+        postUsernameContainer.setAttribute("class","post-user-container");
+        postUsernameLabel.setAttribute("class","post-user");
+
+        voteContainer.setAttribute("class","vote-container");        
+        voteContainer.append(upButton);
+        voteContainer.append(downButton);
+        
+        li.append(postTitleContainer);
+        // li.append(postUsernameContainer);
         li.append(postImage);
-        li.append(br.cloneNode(true));
-        li.append(upButton);
-        li.append(downButton);
-        li.append(br.cloneNode(true));
-        li.append(br.cloneNode(true));
+        li.append(voteContainer);            
+
+        li.setAttribute("class","post-item");
 
         upButton.addEventListener("click", async function () {
             onAuthStateChanged(auth, async (_user) => {
@@ -274,10 +286,14 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
     document.getElementById("all-post-loading").style.display = "none";
 });
 
-document.getElementById('profile-sign-out').addEventListener('click', function () {
+document.getElementById('home-sign-out').addEventListener('click', function () {
     signOut(auth).then(() => {
         location.href = "index.html";
     }).catch((error) => {
         console.log(error);
     });
+})
+
+document.getElementById('home-profile').addEventListener('click', function () {
+    location.href = "profile.html";
 })

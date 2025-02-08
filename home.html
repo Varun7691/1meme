@@ -7,17 +7,139 @@
     <title>7gag</title>
 </head>
 <script type="module" src="js/home.js"></script>
-<link rel="stylesheet" href="css/9one.css" />
+<!-- <link rel="stylesheet" href="css/9one.css" /> -->
+<style>
+    *,
+    *:before,
+    *:after {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    ul {
+        text-align: center;
+        list-style-type: none;
+    }
+
+    .post-item {
+        border-style: solid;
+        border-width: 1px;
+        border-color: #080710;
+        width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-family: 'Poppins', sans-serif;
+        padding: 20px;
+    }
+
+    .post-title-container {
+        text-align: left;
+    }
+
+    .post-title {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .post-item>img {
+        width: 550px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .vote-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .post-user-container {
+        text-align: left;
+    }
+
+    .post-user {
+        font-size: 14px;
+        font-weight: 100;
+        color: #797979;
+        margin-bottom: 10px;
+    }
+
+    .selected {
+        color: #448AFF;
+        font-weight: 300;
+    }
+
+    .unselected {
+        color: #797979;
+        font-weight: 300;
+    }
+
+    .selected:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .unselected:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .heder-container {
+        width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    button {
+        width: 100%;
+        background-color: #ffffff;
+        border: 2px solid black;
+        color: #080710;
+        padding: 10px 0;
+        font-size: 18px;
+        font-weight: 300;
+        cursor: pointer;
+        margin: 10px 20px;
+    }
+
+    #home-profile {
+        font-size: 18px;
+        color: #080710;
+    }
+
+    #home-profile:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    #home-sign-out {
+        font-size: 18px;
+        color: #080710;
+    }
+
+    #home-sign-out:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+</style>
 
 <body>
-    <div class="grid-container">
-        <div><a href="profile.html">Profile</a></div>
+    <div class="heder-container">
         <div>
             <h1>7gag</h1>
         </div>
-        <div><button id='profile-sign-out'>Sign Out</button></div>
+        <div>
+            <label id='home-profile'>Profile</label>
+            <label id='home-sign-out'>Sign Out</label>
+        </div>
     </div>
-    <h2>All posts</h2>
     <label id="all-post-loading">Loading...</label>
     <ul id="all-posts-list"></ul>
 </body>

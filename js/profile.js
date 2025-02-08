@@ -58,7 +58,7 @@ onAuthStateChanged(auth, async (_user) => {
             userPostsQueryQuerySnapshot.forEach((_post) => {
                 const post = _post.data();
 
-                listHtml += `<li>${post.post_title}<br/><img src="${post.post_image_path}"id='user-display-picture' width="10%" height="10%"/><br/>${post.up_count} Ups - ${post.down_count} Downs</li>`;
+                listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title}</label></div><img src="${post.post_image_path}"id='user-display-picture'/><br/><div class="vote-container"><label class="post-up-btn">${post.up_count} Ups</label> <label class="post-down-btn"> ${post.down_count} Downs</label></div></li>`;
 
                 document.getElementById("my-posts-list").innerHTML = listHtml;
             });
@@ -74,48 +74,100 @@ const myPostsButton = document.getElementById("my-posts-button");
 const myCommentsButton = document.getElementById("my-comments-button");
 const myUpvotesButton = document.getElementById("my-upvotes-button");
 const uploadPostsButton = document.getElementById("upload-posts-button");
+const uploadNewPostsButton = document.getElementById("upload-new-posts-button");
 
 // Passing parameter to a function - https://stackoverflow.com/a/12024498
 myPostsButton.addEventListener("click", function () { showHideTabs(1) }, false);
 myCommentsButton.addEventListener("click", function () { showHideTabs(2) }, false);
 myUpvotesButton.addEventListener("click", function () { showHideTabs(3) }, false);
 uploadPostsButton.addEventListener("click", function () { showHideTabs(4) }, false);
+uploadNewPostsButton.addEventListener("click", function () { showHideTabs(5) }, false);
 
 function showHideTabs(containerNumber) {
     const myPostsContainer = document.getElementById("my-posts-container");
     const myCommentsContainer = document.getElementById("my-comments-container");
     const myUpvotesContainer = document.getElementById("my-upvotes-container");
     const uploadPostsContainer = document.getElementById("upload-posts-container");
+    const uploadNewPostsContainer = document.getElementById("upload-new-posts-container");
     switch (containerNumber) {
         case 1:
             myPostsContainer.style.display = "block";
             myCommentsContainer.style.display = "none";
             myUpvotesContainer.style.display = "none";
             uploadPostsContainer.style.display = "none";
+            uploadNewPostsContainer.style.display = "none";
+
+            myPostsButton.className = "tab-selected";
+            myCommentsButton.className = "tab-unselected";
+            myUpvotesButton.className = "tab-unselected";
+            uploadPostsButton.className = "tab-unselected";
+            uploadNewPostsButton.className = "tab-unselected";
             break;
         case 2:
             myPostsContainer.style.display = "none";
             myCommentsContainer.style.display = "block";
             myUpvotesContainer.style.display = "none";
             uploadPostsContainer.style.display = "none";
+            uploadNewPostsContainer.style.display = "none";
+
+            myPostsButton.className = "tab-unselected";
+            myCommentsButton.className = "tab-selected";
+            myUpvotesButton.className = "tab-unselected";
+            uploadPostsButton.className = "tab-unselected";
+            uploadNewPostsButton.className = "tab-unselected";
             break;
         case 3:
             myPostsContainer.style.display = "none";
             myCommentsContainer.style.display = "none";
             myUpvotesContainer.style.display = "block";
             uploadPostsContainer.style.display = "none";
+            uploadNewPostsContainer.style.display = "none";
+            uploadNewPostsButton.className = "tab-unselected";
+
+            myPostsButton.className = "tab-unselected";
+            myCommentsButton.className = "tab-unselected";
+            myUpvotesButton.className = "tab-selected";
+            uploadPostsButton.className = "tab-unselected";
+            uploadNewPostsButton.className = "tab-unselected";
             break;
         case 4:
             myPostsContainer.style.display = "none";
             myCommentsContainer.style.display = "none";
             myUpvotesContainer.style.display = "none";
             uploadPostsContainer.style.display = "block";
+            uploadNewPostsContainer.style.display = "none";
+
+            myPostsButton.className = "tab-unselected";
+            myCommentsButton.className = "tab-unselected";
+            myUpvotesButton.className = "tab-unselected";
+            uploadPostsButton.className = "tab-selected";
+            uploadNewPostsButton.className = "tab-unselected";
+            break;
+        case 5:
+            myPostsContainer.style.display = "none";
+            myCommentsContainer.style.display = "none";
+            myUpvotesContainer.style.display = "none";
+            uploadPostsContainer.style.display = "none";
+            uploadNewPostsContainer.style.display = "block";
+
+            myPostsButton.className = "tab-unselected";
+            myCommentsButton.className = "tab-unselected";
+            myUpvotesButton.className = "tab-unselected";
+            uploadPostsButton.className = "tab-unselected";
+            uploadNewPostsButton.className = "tab-selected";
             break;
         default:
             myPostsContainer.style.display = "block";
             myCommentsContainer.style.display = "none";
             myUpvotesContainer.style.display = "none";
             uploadPostsContainer.style.display = "none";
+            uploadNewPostsContainer.style.display = "none";
+
+            myPostsButton.className = "tab-selected";
+            myCommentsButton.className = "tab-unselected";
+            myUpvotesButton.className = "tab-unselected";
+            uploadPostsButton.className = "tab-unselected";
+            uploadNewPostsButton.className = "tab-unselected";
     }
 }
 showHideTabs(1);
@@ -144,9 +196,11 @@ uploadForm.addEventListener('submit', async function (event) {
     if (user.emailVerified) {
         await getDoc(doc(firestore, "users", user.email)).then((_userDocument) => {
             console.log(_userDocument.data().last_uploaded);
+            const user = _userDocument.data();
 
+            debugger;
             //https://stackoverflow.com/a/7709819
-            const oldDate = _userDocument.data().last_uploaded.toDate();
+            const oldDate = user.last_uploaded.toDate();
             const newDate = new Date();
             const diffTime = Math.abs(oldDate - newDate);
             var diffDays = Math.floor(diffTime / 86400000); // days
@@ -206,7 +260,7 @@ uploadForm.addEventListener('submit', async function (event) {
                     }
                 );
             } else {
-                alert("Please wait for an hour before uploading again.");
+                alert("Please wait for 15 mins before uploading again.");
             }
 
         }).catch((error) => {
@@ -239,3 +293,26 @@ document.getElementById('profile-sign-out').addEventListener('click', function (
 document.getElementById('profile-home-button').addEventListener('click',
     function () { location.href = "home.html" }
 )
+
+const dropArea = document.querySelector(".drop_box"),
+    button = dropArea.querySelector("button"),
+    input = dropArea.querySelector("input"),
+    dragText = dropArea.querySelector("header");
+
+button.onclick = () => {
+    input.click();
+};
+
+input.addEventListener("change", function (e) {
+    debugger;
+    var fileName = e.target.files[0].name;
+    let filedata = `
+      <form action="" method="post">
+      <div class="form">
+      <h4>${fileName}</h4>
+      <input type="text" placeholder="Enter post title">
+      <button class="btn">Upload</button>
+      </div>
+      </form>`;
+    dropArea.innerHTML = filedata;
+});
