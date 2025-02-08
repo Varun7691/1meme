@@ -7,24 +7,90 @@
     <title>7gag - Profile</title>
 </head>
 <script type="module" src="js/profile.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/fontawesome.min.css" rel="stylesheet">
+
+<style>
+    *,
+    *:before,
+    *:after {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+        text-align: center;
+    }
+
+    .profile-container {
+        height: 150px;
+        width: 400px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+        border-color: grey;
+        border-style: solid;
+        border-width: 1px;
+        padding: 20px 35px;
+        display: flex;
+    }
+
+    .profile-container>img {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-tabs {
+        display: flex;
+    }
+
+    button {
+        margin-top: 30px;
+        background-color: #ffffff;
+        border: 2px solid black;
+        color: #080710;
+        padding: 15px 0;
+        font-size: 18px;
+        font-weight: 400;
+        cursor: pointer;
+        padding: 10px 20px;
+    }
+
+    button:hover {
+        background-color: #080710;
+        color: #ffffff;
+    }
+
+    h3 {
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 42px;
+        text-align: center;
+    }
+</style>
 
 <body>
-    <button id='profile-home-button'>Home</button>
-    <img src="https://firebasestorage.googleapis.com/v0/b/one-5769e.firebasestorage.app/o/user_placeholder.jpg?alt=media&token=356c6aa7-a290-4167-a0c6-e9f72bef8909"
-        id='user-display-picture' width="20%" height="20%" />
+    <div class="profile-container">
+        <!-- <label id='profile-home-button'>Home</label> -->
+        <button class="btn" id='profile-home-button'><i class="fa-solid fa-bars"></i></button>
+        <img src="https://firebasestorage.googleapis.com/v0/b/one-5769e.firebasestorage.app/o/user_placeholder.jpg?alt=media&token=356c6aa7-a290-4167-a0c6-e9f72bef8909"
+            id='user-display-picture' />
+        <div>
+            <label id="welcome-user">Loading...</label>
+            <hr>
+            <label id="profile-description"></label>
+            <label id="active-since"></label>
+        </div>
+    </div>
     <br />
-    <h1 id="welcome-user">Loading...</h1>
-    <label id="profile-description"></label>
     <br />
-    <label id="active-since"></label>
-
-    <br />
-    <br />
-    <button id='my-posts-button'>My Posts</button>
-    <button id='my-comments-button' style="display: none;">Saved</button>
-    <button id='my-upvotes-button'>My Upvotes</button>
-    <button id='upload-posts-button'>Upload Post</button>
-
+    <div id="profile-tabs">
+        <button id='my-posts-button'>My Posts</button>
+        <button id='my-comments-button' style="display: none;">Saved</button>
+        <button id='my-upvotes-button'>My Upvotes</button>
+        <button id='upload-posts-button'>Upload Post</button>
+    </div>
     <div id="my-posts-container" style="display: none;">
         <h3 id="welcome-user">My Posts</h3>
         <ul id="my-posts-list">
