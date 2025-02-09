@@ -58,7 +58,7 @@ onAuthStateChanged(auth, async (_user) => {
             userPostsQueryQuerySnapshot.forEach((_post) => {
                 const post = _post.data();
 
-                listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title}</label></div><img src="${post.post_image_path}"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn">${post.up_count} Ups</label> <label class="post-down-btn"> ${post.down_count} Downs</label></div> <label class="post-age">${getPostAgeString(post.created_on.toDate())} </label></div></li>`;
+                listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title}</label></div><img src="${post.post_image_path}"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn">${post.up_count}<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn"> ${post.down_count}<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(post.created_on.toDate())} </label></div></li>`;
 
                 document.getElementById("my-posts-list").innerHTML = listHtml;
             });
@@ -89,11 +89,6 @@ function getPostAgeString(postDate, referenceDate = new Date()) {
     
     return "Just now";
 }
-
-// Example usage:
-let postDate = "2024-02-08T14:30:00"; // Example post date
-console.log(getPostAgeString(postDate)); 
-
 
 const myPostsButton = document.getElementById("my-posts-button");
 const myCommentsButton = document.getElementById("my-comments-button");

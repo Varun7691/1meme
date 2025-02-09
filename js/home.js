@@ -52,6 +52,13 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         let upButton = document.createElement("label");
         let downButton = document.createElement("label");
 
+        // <i class="fa fa-play fa-rotate-270 fa-xl"></i>
+        let upFontAwesome = document.createElement("i");
+        upFontAwesome.setAttribute("class","fa fa-play fa-rotate-270 fa-xl");
+
+        let downFontAwesome = document.createElement("i");
+        downFontAwesome.setAttribute("class","fa fa-play fa-rotate-90 fa-xl");
+
         postUsernameLabel.textContent = postUser.userName;
         postUsernameLabel.className = "post-username";
         postTitleLabel.textContent = post.post_title;
@@ -61,9 +68,9 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         postImage.setAttribute('width', '30%')
         postImage.setAttribute('height', '30%')
         
-        upButton.textContent = post.up_count + " Ups";
+        upButton.textContent = post.up_count + " ";
         upButton.id = "up_" + _post.id;
-        downButton.textContent = post.down_count + " Downs";
+        downButton.textContent = post.down_count + " ";
         downButton.id = "down_" + _post.id;
 
         postDateLabel.textContent = getPostAgeString(post.created_on.toDate());
@@ -108,6 +115,9 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         voteContainer.setAttribute("class","vote-container");
         upButton.setAttribute("class","post-up-btn");
         downButton.setAttribute("class","post-down-btn");
+
+        upButton.append(upFontAwesome);
+        downButton.append(downFontAwesome);
         voteContainer.append(upButton);
         voteContainer.append(downButton);
 

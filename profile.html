@@ -5,10 +5,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>7gag - Profile</title>
+    <script src="https://kit.fontawesome.com/0af1729e03.js" crossorigin="anonymous"></script>
 </head>
 <script type="module" src="js/profile.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"> -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=arrow_back_ios" />
 
 <style>
@@ -301,10 +302,20 @@
         font-size: 14px;
     }
 
+    .post-up-btn>i{
+        width: 20px;
+        margin: 0 2px;
+    }
+
     .post-down-btn{
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
+    }
+
+    .post-down-btn>i{
+        width: 20px;
+        margin: 0 2px;
     }
 
     .post-up-btn:hover{
@@ -336,7 +347,7 @@
 
 <body>
     <div class="profile-container">
-        <button class="home-btn material-symbols-outlined" id='profile-home-button'>arrow_back_ios</button>
+        <button class="home-btn" id='profile-home-button'><i class="fa-solid fa-chevron-left fa-2xl"></i></button>
         <img src="images/user.png"
             id='user-display-picture' />
         <div>
