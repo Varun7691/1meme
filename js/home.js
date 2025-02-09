@@ -54,10 +54,10 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
 
         // <i class="fa fa-play fa-rotate-270 fa-xl"></i>
         let upFontAwesome = document.createElement("i");
-        upFontAwesome.setAttribute("class","fa fa-play fa-rotate-270 fa-xl");
+        upFontAwesome.setAttribute("class", "fa fa-play fa-rotate-270 fa-xl");
 
         let downFontAwesome = document.createElement("i");
-        downFontAwesome.setAttribute("class","fa fa-play fa-rotate-90 fa-xl");
+        downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
 
         postUsernameLabel.textContent = postUser.userName;
         postUsernameLabel.className = "post-username";
@@ -67,7 +67,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         postImage.src = post.post_image_path;
         postImage.setAttribute('width', '30%')
         postImage.setAttribute('height', '30%')
-        
+
         upButton.textContent = post.up_count + " ";
         upButton.id = "up_" + _post.id;
         downButton.textContent = post.down_count + " ";
@@ -102,19 +102,19 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         });
 
         postTitleContainer.append(postTitleLabel);
-        postTitleContainer.setAttribute("class","post-title-container");
-        postTitleLabel.setAttribute("class","post-title");
+        postTitleContainer.setAttribute("class", "post-title-container");
+        postTitleLabel.setAttribute("class", "post-title");
 
         postUsernameContainer.append(postUsernameLabel);
-        postUsernameContainer.setAttribute("class","post-user-container");
-        postUsernameLabel.setAttribute("class","post-user");
+        postUsernameContainer.setAttribute("class", "post-user-container");
+        postUsernameLabel.setAttribute("class", "post-user");
 
-        voteDateContainer.setAttribute("class","vote-date-container");
-        postDateLabel.setAttribute("class","post-age");
+        voteDateContainer.setAttribute("class", "vote-date-container");
+        postDateLabel.setAttribute("class", "post-age");
 
-        voteContainer.setAttribute("class","vote-container");
-        upButton.setAttribute("class","post-up-btn");
-        downButton.setAttribute("class","post-down-btn");
+        voteContainer.setAttribute("class", "vote-container");
+        upButton.setAttribute("class", "post-up-btn");
+        downButton.setAttribute("class", "post-down-btn");
 
         upButton.append(upFontAwesome);
         downButton.append(downFontAwesome);
@@ -123,13 +123,14 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
 
         voteDateContainer.append(voteContainer);
         voteDateContainer.append(postDateLabel);
-        
+
         li.append(postTitleContainer);
         // li.append(postUsernameContainer);
         li.append(postImage);
-        li.append(voteDateContainer);            
+        li.append(voteDateContainer);
 
-        li.setAttribute("class","post-item");
+        li.setAttribute("class", "post-item");
+        downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
 
         upButton.addEventListener("click", async function () {
             onAuthStateChanged(auth, async (_user) => {
@@ -157,8 +158,12 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                     await getDoc(doc(firestore, "posts", _post.id)).then((_updatedPost) => {
 
                                         post = _updatedPost.data();
-                                        upButton.textContent = _updatedPost.data().up_count + " Ups";
+                                        
+                                        upButton.textContent = _updatedPost.data().up_count + " ";
                                         upButton.setAttribute("class", "unselected");
+
+                                        upButton.append(upFontAwesome);
+                                        downButton.append(downFontAwesome);
                                     }).catch((error) => {
                                         console.log("Could not get post after upvote update - " + error);
                                     });
@@ -193,11 +198,15 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                         .then((_updatedPost) => {
 
                                             post = _updatedPost.data();
-                                            upButton.textContent = _updatedPost.data().up_count + " Ups";
-                                            downButton.textContent = _updatedPost.data().down_count + " Downs";
+                                            
+                                            upButton.textContent = _updatedPost.data().up_count + " ";
+                                            downButton.textContent = _updatedPost.data().down_count + " ";
 
                                             upButton.setAttribute("class", "selected");
                                             downButton.setAttribute("class", "unselected");
+
+                                            upButton.append(upFontAwesome);
+                                            downButton.append(downFontAwesome);
                                         }).catch((error) => {
                                             console.log("Could not get post after upvote update - " + error);
                                         });
@@ -243,9 +252,13 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                     await getDoc(doc(firestore, "posts", _post.id)).then((_updatedPost) => {
 
                                         post = _updatedPost.data();
-                                        downButton.textContent = _updatedPost.data().down_count + " Downs";
+                                        
+                                        downButton.textContent = _updatedPost.data().down_count + " ";
 
                                         downButton.setAttribute("class", "unselected");
+
+                                        upButton.append(upFontAwesome);
+                                            downButton.append(downFontAwesome);
                                     }).catch((error) => {
                                         console.log("Could not get post after upvote update - " + error);
                                     });
@@ -279,11 +292,15 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                         .then((_updatedPost) => {
 
                                             post = _updatedPost.data();
-                                            downButton.textContent = _updatedPost.data().down_count + " Downs";
-                                            upButton.textContent = _updatedPost.data().up_count + " Ups";
+                                            
+                                            downButton.textContent = _updatedPost.data().down_count + " ";
+                                            upButton.textContent = _updatedPost.data().up_count + " ";
 
                                             upButton.setAttribute("class", "unselected");
                                             downButton.setAttribute("class", "selected");
+
+                                            upButton.append(upFontAwesome);
+                                            downButton.append(downFontAwesome);
                                         }).catch((error) => {
                                             console.log("Could not get post after upvote update - " + error);
                                         });
@@ -312,7 +329,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
 function getPostAgeString(postDate, referenceDate = new Date()) {
     postDate = new Date(postDate);
     referenceDate = new Date(referenceDate);
-    
+
     let diffMs = referenceDate - postDate; // Difference in milliseconds
     let minutes = Math.floor(diffMs / (1000 * 60));
     let hours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -325,7 +342,7 @@ function getPostAgeString(postDate, referenceDate = new Date()) {
     if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
     if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
     if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-    
+
     return "Just now";
 }
 
