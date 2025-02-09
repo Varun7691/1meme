@@ -6,8 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>7gag</title>
 </head>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 <script type="module" src="js/home.js"></script>
-<!-- <link rel="stylesheet" href="css/9one.css" /> -->
 <style>
     *,
     *:before,
@@ -70,11 +71,15 @@
     .selected {
         color: #448AFF;
         font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
     }
 
     .unselected {
         color: #797979;
         font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
     }
 
     .selected:hover {
@@ -87,7 +92,7 @@
         cursor: pointer;
     }
 
-    .heder-container {
+    .header-container {
         width: 700px;
         margin-left: auto;
         margin-right: auto;
@@ -95,6 +100,7 @@
         margin-bottom: 10px;
         display: flex;
         justify-content: space-between;
+        align-items: baseline;
     }
 
     button {
@@ -112,6 +118,7 @@
     #home-profile {
         font-size: 18px;
         color: #080710;
+        padding: 0 10px;
     }
 
     #home-profile:hover {
@@ -122,20 +129,32 @@
     #home-sign-out {
         font-size: 18px;
         color: #080710;
+        padding: 0 10px;
     }
 
     #home-sign-out:hover {
         text-decoration: underline;
         cursor: pointer;
     }
+
+    .vote-date-container{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .post-age{
+        font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
+    }
 </style>
 
 <body>
-    <div class="heder-container">
+    <div class="header-container">
         <div>
             <h1>7gag</h1>
         </div>
-        <div>
+        <div class="header-buttons-container">
             <label id='home-profile'>Profile</label>
             <label id='home-sign-out'>Sign Out</label>
         </div>

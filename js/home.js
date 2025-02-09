@@ -45,6 +45,9 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         let postTitleLabel = document.createElement("label");
         let postImage = document.createElement("img");
 
+        let voteDateContainer = document.createElement("div");
+        let postDateLabel = document.createElement("label");
+
         let voteContainer = document.createElement("div");
         let upButton = document.createElement("label");
         let downButton = document.createElement("label");
@@ -57,11 +60,13 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         postImage.src = post.post_image_path;
         postImage.setAttribute('width', '30%')
         postImage.setAttribute('height', '30%')
-
+        
         upButton.textContent = post.up_count + " Ups";
         upButton.id = "up_" + _post.id;
         downButton.textContent = post.down_count + " Downs";
         downButton.id = "down_" + _post.id;
+
+        postDateLabel.textContent = getPostAgeString(post.created_on.toDate());
 
         onAuthStateChanged(auth, async (_user) => {
             if (_user) {
@@ -97,14 +102,20 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         postUsernameContainer.setAttribute("class","post-user-container");
         postUsernameLabel.setAttribute("class","post-user");
 
-        voteContainer.setAttribute("class","vote-container");        
+        voteDateContainer.setAttribute("class","vote-date-container");
+        postDateLabel.setAttribute("class","post-age");
+
+        voteContainer.setAttribute("class","vote-container");
         voteContainer.append(upButton);
         voteContainer.append(downButton);
+
+        voteDateContainer.append(voteContainer);
+        voteDateContainer.append(postDateLabel);
         
         li.append(postTitleContainer);
         // li.append(postUsernameContainer);
         li.append(postImage);
-        li.append(voteContainer);            
+        li.append(voteDateContainer);            
 
         li.setAttribute("class","post-item");
 
@@ -285,6 +296,26 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
     // Hiding the loading label
     document.getElementById("all-post-loading").style.display = "none";
 });
+
+function getPostAgeString(postDate, referenceDate = new Date()) {
+    postDate = new Date(postDate);
+    referenceDate = new Date(referenceDate);
+    
+    let diffMs = referenceDate - postDate; // Difference in milliseconds
+    let minutes = Math.floor(diffMs / (1000 * 60));
+    let hours = Math.floor(diffMs / (1000 * 60 * 60));
+    let days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    let weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
+    let years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
+
+    if (years > 0) return `${years} year${years > 1 ? 's' : ''} ago`;
+    if (weeks > 0) return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    
+    return "Just now";
+}
 
 document.getElementById('home-sign-out').addEventListener('click', function () {
     signOut(auth).then(() => {

@@ -58,7 +58,7 @@ onAuthStateChanged(auth, async (_user) => {
             userPostsQueryQuerySnapshot.forEach((_post) => {
                 const post = _post.data();
 
-                listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title}</label></div><img src="${post.post_image_path}"id='user-display-picture'/><br/><div class="vote-container"><label class="post-up-btn">${post.up_count} Ups</label> <label class="post-down-btn"> ${post.down_count} Downs</label></div></li>`;
+                listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title}</label></div><img src="${post.post_image_path}"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn">${post.up_count} Ups</label> <label class="post-down-btn"> ${post.down_count} Downs</label></div> <label class="post-age">${getPostAgeString(post.created_on.toDate())} </label></div></li>`;
 
                 document.getElementById("my-posts-list").innerHTML = listHtml;
             });
@@ -69,6 +69,31 @@ onAuthStateChanged(auth, async (_user) => {
         location.href = "index.html";
     }
 });
+
+function getPostAgeString(postDate, referenceDate = new Date()) {
+    postDate = new Date(postDate);
+    referenceDate = new Date(referenceDate);
+    
+    let diffMs = referenceDate - postDate; // Difference in milliseconds
+    let minutes = Math.floor(diffMs / (1000 * 60));
+    let hours = Math.floor(diffMs / (1000 * 60 * 60));
+    let days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    let weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
+    let years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
+
+    if (years > 0) return `${years} year${years > 1 ? 's' : ''} ago`;
+    if (weeks > 0) return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+    
+    return "Just now";
+}
+
+// Example usage:
+let postDate = "2024-02-08T14:30:00"; // Example post date
+console.log(getPostAgeString(postDate)); 
+
 
 const myPostsButton = document.getElementById("my-posts-button");
 const myCommentsButton = document.getElementById("my-comments-button");
