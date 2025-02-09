@@ -62,7 +62,7 @@ form.addEventListener('submit', async function (event) {
                         .then(() => {
                             // Email verification sent!
                             let msg = 'An email verification link has been sent to ' + user.email;
-                        });
+                        }).catch((error) => { console.log(error) });
                 })
                 .catch((error) => {
                     const errorCode = error.code;

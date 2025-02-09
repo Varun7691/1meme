@@ -106,6 +106,8 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         postDateLabel.setAttribute("class","post-age");
 
         voteContainer.setAttribute("class","vote-container");
+        upButton.setAttribute("class","post-up-btn");
+        downButton.setAttribute("class","post-down-btn");
         voteContainer.append(upButton);
         voteContainer.append(downButton);
 

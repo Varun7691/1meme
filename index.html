@@ -8,6 +8,8 @@
 </head>
 <script type="module" src="js/index.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
 
 <style>
     *,
@@ -27,7 +29,7 @@
         font-weight: 600;
     }
 
-    form {
+    .login-form {
         height: 550px;
         width: 500px;
         position: absolute;
@@ -41,12 +43,12 @@
         padding: 20px 35px;
     }
 
-    form * {
+    .login-form * {
         font-family: 'Poppins', sans-serif;
         letter-spacing: 0.5px;
     }
 
-    form h3 {
+    .login-form h3 {
         font-size: 28px;
         font-weight: 500;
         line-height: 42px;
@@ -118,12 +120,69 @@
         text-decoration: underline;
         cursor: pointer;
     }
+
+    /* The Modal (background) */
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1;
+        /* Sit on top */
+        padding-top: 100px;
+        /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        overflow: auto;
+        /* Enable scroll if needed */
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Black w/ opacity */
+    }
+
+    /* Modal Content */
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 550px;
+    }
+
+    /* The Close Button */
+    .close {
+        color: #aaaaaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+        font-variation-settings:
+            'FILL' 0,
+            'wght' 400,
+            'GRAD' 0,
+            'opsz' 24
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .reset-password{
+        margin-top: 20px;
+    }
 </style>
 
 <body>
     <h1>7gag
     </h1>
-    <form id="login-form">
+    <form id="login-form" class="login-form">
         <h3>Login
         </h3>
         <label for="email"><b>Email: </b></label>
@@ -133,11 +192,26 @@
         <button type="submit">Login</button>
 
         <div class="forgot-password-signup">
-            <label class="forgot-password">Forgot password?</label>
+            <label id="forgot-password-btn" class="forgot-password">Forgot password?</label>
             <label type="button" class="signup" id="signup-button">SignUp</label>
         </div>
 
         <button type="button" class="cancelbtn" id="guest-button">Just Visiting</button>
     </form>
 
+    <!-- The Modal -->
+    <div id="myModal" class="modal">
+
+        <!-- Modal content -->
+        <div class="modal-content">
+            <span class="close material-symbols-outlined">close</span>
+            <p>Forgot Password</p>
+            <form id="forgot-password-form">                
+                <label for="email"><b>Email: </b></label>
+                <input type="text" placeholder="Enter email to send the reset password link" name="email" id="forgot-password-email" required>
+                <button type="submit" class="reset-password" id="reset-password-button">Reset</button>
+            </form>
+        </div>
+
+    </div>
 </body>
