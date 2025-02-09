@@ -56,13 +56,22 @@ document.getElementById("forgot-password-btn").onclick = function () {
     modal.style.display = "block";
 };
 
+var EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            EMAIL_REGEX
+        );
+};
 
 const forgotPasswordform = document.getElementById('forgot-password-form');
-forgotPasswordform.addEventListener('submit',function (event) {
+forgotPasswordform.addEventListener('submit', function (event) {
     event.preventDefault();
     debugger;
     const email = document.getElementById("forgot-password-email").value;
-    sendPasswordResetEmail(auth, email)
+    if(validateEmail(email)){
+        sendPasswordResetEmail(auth, email)
         .then(() => {
             alert("An email has been sent to " + email);
         })
@@ -70,6 +79,9 @@ forgotPasswordform.addEventListener('submit',function (event) {
             const errorCode = error.code;
             const errorMessage = error.message;
         });
+    }else{
+        alert("Please enter a valid email.");
+    }
 });
 
 // Get the modal
