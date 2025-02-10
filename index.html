@@ -9,7 +9,8 @@
 <script type="module" src="js/index.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
+<link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
 
 <style>
     *,
@@ -174,8 +175,15 @@
         cursor: pointer;
     }
 
-    .reset-password{
+    .reset-password {
         margin-top: 20px;
+    }
+
+    .version-label {
+        font-size: 12px;
+        font-weight: 100;
+        color: #797979;
+        text-align: center;
     }
 </style>
 
@@ -197,6 +205,8 @@
         </div>
 
         <button type="button" class="cancelbtn" id="guest-button">Just Visiting</button>
+
+        <label class="version-label">Version - 1.0.0</label>
     </form>
 
     <!-- The Modal -->
@@ -206,12 +216,12 @@
         <div class="modal-content">
             <span class="close material-symbols-outlined">close</span>
             <p>Forgot Password</p>
-            <form id="forgot-password-form">                
+            <form id="forgot-password-form">
                 <label for="email"><b>Email: </b></label>
-                <input type="text" placeholder="Enter email to send the reset password link" name="email" id="forgot-password-email" required>
+                <input type="text" placeholder="Enter email to send the reset password link" name="email"
+                    id="forgot-password-email" required>
                 <button type="submit" class="reset-password" id="reset-password-button">Reset</button>
             </form>
         </div>
-
     </div>
 </body>
