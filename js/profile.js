@@ -205,7 +205,7 @@ function showHideTabs(containerNumber) {
             uploadNewPostsButton.className = "tab-unselected";
     }
 }
-showHideTabs(3);
+showHideTabs(1);
 
 var uploadPostBase64 = "";
 var selectedFileName = "";
