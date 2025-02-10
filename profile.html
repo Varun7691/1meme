@@ -262,12 +262,12 @@
         border-radius: 4px;
     }
 
-    ul{
+    ul {
         text-align: center;
         list-style-type: none;
     }
 
-    .post-item{
+    .post-item {
         border-style: solid;
         border-width: 1px;
         border-color: #080710;
@@ -280,63 +280,77 @@
         padding: 20px;
     }
 
-    .post-title-container{
+    .post-title-container {
         text-align: left;
     }
 
-    .post-title{
+    .post-title {
         font-size: 20px;
         font-weight: 600;
-        padding: 0 10px ;
+        padding: 0 10px;
     }
 
-    .post-item>img{
+    .post-item>img {
         width: 550px;
     }
 
-    .post-up-btn{
+    .post-up-btn {
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
     }
 
-    .post-up-btn>i{
+    .post-up-btn>i {
         width: 20px;
         margin: 0 2px;
     }
 
-    .post-down-btn{
+    .post-down-btn {
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
     }
 
-    .post-down-btn>i{
+    .post-down-btn>i {
         width: 20px;
         margin: 0 2px;
     }
 
-    .post-up-btn:hover{
+    .post-up-btn:hover {
         text-decoration: underline;
         cursor: pointer;
     }
 
-    .post-down-btn:hover{
+    .post-down-btn:hover {
         text-decoration: underline;
         cursor: pointer;
     }
 
-    .vote-container{
+    .vote-container {
         display: flex;
         justify-content: space-between;
     }
 
-    .vote-date-container{
+    .vote-date-container {
         display: flex;
         justify-content: space-between;
     }
 
-    .post-age{
+    .post-age {
+        font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .selected {
+        color: #448AFF;
+        font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .unselected {
+        color: #797979;
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
@@ -346,8 +360,7 @@
 <body>
     <div class="profile-container">
         <button class="home-btn" id='profile-home-button'><i class="fa-solid fa-chevron-left fa-2xl"></i></button>
-        <img src="images/user.png"
-            id='user-display-picture' />
+        <img src="images/user.png" id='user-display-picture' />
         <div>
             <label id="welcome-user">Loading...</label>
             <hr>
@@ -377,7 +390,9 @@
 
     <div id="my-upvotes-container" style="display: none;">
         <br />
-        <h3 id="welcome-user">My Upvotes</h3>
+        <ul id="my-upvoted-posts-list">
+            <li>No results</li>
+        </ul>
     </div>
 
     <div id="upload-new-posts-container" style="display: none;">

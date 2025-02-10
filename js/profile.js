@@ -24,7 +24,6 @@ const auth = getAuth(app);
 // Firestore
 const firestore = getFirestore(app, "nineone");
 
-
 onAuthStateChanged(auth, async (_user) => {
     if (_user) {
         user = _user;
@@ -62,6 +61,22 @@ onAuthStateChanged(auth, async (_user) => {
 
                 document.getElementById("my-posts-list").innerHTML = listHtml;
             });
+
+            var updVotedPostsListHtml = "";
+
+            // Get user's upvoted posts
+            console.log(user.up_posts);
+            const upVotedPostsArray = user.up_posts;
+            const upVotedPostsQuery = query(collection(firestore, "posts"), where("__name__", 'in', upVotedPostsArray)); // https://stackoverflow.com/a/62150539
+            const upVotedPostsQuerySnapshot = await getDocs(upVotedPostsQuery);
+            upVotedPostsQuerySnapshot.forEach((_post) => {
+                const post = _post.data();
+                console.log(post);
+
+                updVotedPostsListHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title}</label></div><img src="${post.post_image_path}"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn selected">${post.up_count}<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn unselected"> ${post.down_count}<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(post.created_on.toDate())} </label></div></li>`;
+
+                document.getElementById("my-upvoted-posts-list").innerHTML = updVotedPostsListHtml;
+            });
         });
 
     } else {
@@ -73,7 +88,7 @@ onAuthStateChanged(auth, async (_user) => {
 function getPostAgeString(postDate, referenceDate = new Date()) {
     postDate = new Date(postDate);
     referenceDate = new Date(referenceDate);
-    
+
     let diffMs = referenceDate - postDate; // Difference in milliseconds
     let minutes = Math.floor(diffMs / (1000 * 60));
     let hours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -86,7 +101,7 @@ function getPostAgeString(postDate, referenceDate = new Date()) {
     if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
     if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
     if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
-    
+
     return "Just now";
 }
 
@@ -190,7 +205,7 @@ function showHideTabs(containerNumber) {
             uploadNewPostsButton.className = "tab-unselected";
     }
 }
-showHideTabs(1);
+showHideTabs(3);
 
 var uploadPostBase64 = "";
 var selectedFileName = "";
