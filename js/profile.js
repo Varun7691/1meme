@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getFirestore, getDocs, collection, query, where, setDoc, doc, Timestamp, updateDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
+import { getFirestore, getDocs, collection, query, where, setDoc, doc, Timestamp, updateDoc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
@@ -52,7 +52,7 @@ onAuthStateChanged(auth, async (_user) => {
             var listHtml = "";
 
             // Get user posts
-            const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.email));
+            const userPostsQuery = query(collection(firestore, "posts"), where("created_by", "==", user.email), orderBy("created_on", "desc"));
             const userPostsQueryQuerySnapshot = await getDocs(userPostsQuery);
             userPostsQueryQuerySnapshot.forEach((_post) => {
                 const post = _post.data();
@@ -65,13 +65,11 @@ onAuthStateChanged(auth, async (_user) => {
             var updVotedPostsListHtml = "";
 
             // Get user's upvoted posts
-            console.log(user.up_posts);
             const upVotedPostsArray = user.up_posts;
-            const upVotedPostsQuery = query(collection(firestore, "posts"), where("__name__", 'in', upVotedPostsArray)); // https://stackoverflow.com/a/62150539
+            const upVotedPostsQuery = query(collection(firestore, "posts"), where("__name__", 'in', upVotedPostsArray), orderBy("created_on", "desc")); // https://stackoverflow.com/a/62150539
             const upVotedPostsQuerySnapshot = await getDocs(upVotedPostsQuery);
             upVotedPostsQuerySnapshot.forEach((_post) => {
                 const post = _post.data();
-                console.log(post);
 
                 updVotedPostsListHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title}</label></div><img src="${post.post_image_path}"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn selected">${post.up_count}<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn unselected"> ${post.down_count}<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(post.created_on.toDate())} </label></div></li>`;
 
