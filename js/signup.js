@@ -26,11 +26,6 @@ const form = document.getElementById('signup-form');
 const email = document.getElementById('email');
 const password = document.getElementById('password');
 
-const status = await validatePassword(auth, password.value);
-if (!status.isValid) {
-    const needsLowerCase = status.containsLowercaseLetter !== true;
-}
-
 var EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const validateEmail = (email) => {
     return String(email)
@@ -67,7 +62,7 @@ form.addEventListener('submit', async function (event) {
                         .then(() => {
                             // Email verification sent!
                             let msg = 'An email verification link has been sent to ' + user.email;
-                        });
+                        }).catch((error) => { console.log(error) });
                 })
                 .catch((error) => {
                     const errorCode = error.code;
@@ -80,4 +75,9 @@ form.addEventListener('submit', async function (event) {
     } else {
         alert("Enter a valid email");
     }
+});
+
+
+document.getElementById("cancel-sign-up").addEventListener("click", function () {
+    window.history.go(-1); return false;
 });

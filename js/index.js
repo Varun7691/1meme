@@ -2,7 +2,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
-import { getAuth, signInWithEmailAndPassword, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js"
+import { getAuth, signInWithEmailAndPassword, signInAnonymously, sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js"
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -51,3 +51,56 @@ document.getElementById("signup-button").onclick = function () {
 document.getElementById("guest-button").onclick = function () {
     location.href = "home.html";
 };
+
+document.getElementById("forgot-password-btn").onclick = function () {
+    modal.style.display = "block";
+};
+
+var EMAIL_REGEX = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const validateEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            EMAIL_REGEX
+        );
+};
+
+const forgotPasswordform = document.getElementById('forgot-password-form');
+forgotPasswordform.addEventListener('submit', function (event) {
+    event.preventDefault();
+    debugger;
+    const email = document.getElementById("forgot-password-email").value;
+    if(validateEmail(email)){
+        sendPasswordResetEmail(auth, email)
+        .then(() => {
+            alert("An email has been sent to " + email);
+        })
+        .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+        });
+    }else{
+        alert("Please enter a valid email.");
+    }
+});
+
+// Get the modal
+var modal = document.getElementById("myModal");
+
+// Get the button that opens the modal
+var btn = document.getElementById("myBtn");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+    modal.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == modal) {
+        modal.style.display = "none";
+    }
+}

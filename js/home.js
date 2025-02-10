@@ -39,13 +39,27 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
     userQueryQuerySnapshot.forEach((_user) => {
         postUser = _user.data();
 
+        let postUsernameContainer = document.createElement("div");
         let postUsernameLabel = document.createElement("label");
+        let postTitleContainer = document.createElement("div");
         let postTitleLabel = document.createElement("label");
         let postImage = document.createElement("img");
-        let upButton = document.createElement("button");
-        let downButton = document.createElement("button");
 
-        postUsernameLabel.textContent = " - " + postUser.userName;
+        let voteDateContainer = document.createElement("div");
+        let postDateLabel = document.createElement("label");
+
+        let voteContainer = document.createElement("div");
+        let upButton = document.createElement("label");
+        let downButton = document.createElement("label");
+
+        // <i class="fa fa-play fa-rotate-270 fa-xl"></i>
+        let upFontAwesome = document.createElement("i");
+        upFontAwesome.setAttribute("class", "fa fa-play fa-rotate-270 fa-xl");
+
+        let downFontAwesome = document.createElement("i");
+        downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
+
+        postUsernameLabel.textContent = postUser.userName;
         postUsernameLabel.className = "post-username";
         postTitleLabel.textContent = post.post_title;
         postTitleLabel.className = "post-title";
@@ -54,10 +68,12 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
         postImage.setAttribute('width', '30%')
         postImage.setAttribute('height', '30%')
 
-        upButton.textContent = post.up_count + " Ups";
+        upButton.textContent = post.up_count + " ";
         upButton.id = "up_" + _post.id;
-        downButton.textContent = post.down_count + " Downs";
+        downButton.textContent = post.down_count + " ";
         downButton.id = "down_" + _post.id;
+
+        postDateLabel.textContent = getPostAgeString(post.created_on.toDate());
 
         onAuthStateChanged(auth, async (_user) => {
             if (_user) {
@@ -85,16 +101,36 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
             }
         });
 
-        li.append(postTitleLabel);
-        li.append(postUsernameLabel);
-        li.append(br.cloneNode(true));
-        li.append(br.cloneNode(true));
+        postTitleContainer.append(postTitleLabel);
+        postTitleContainer.setAttribute("class", "post-title-container");
+        postTitleLabel.setAttribute("class", "post-title");
+
+        postUsernameContainer.append(postUsernameLabel);
+        postUsernameContainer.setAttribute("class", "post-user-container");
+        postUsernameLabel.setAttribute("class", "post-user");
+
+        voteDateContainer.setAttribute("class", "vote-date-container");
+        postDateLabel.setAttribute("class", "post-age");
+
+        voteContainer.setAttribute("class", "vote-container");
+        upButton.setAttribute("class", "post-up-btn");
+        downButton.setAttribute("class", "post-down-btn");
+
+        upButton.append(upFontAwesome);
+        downButton.append(downFontAwesome);
+        voteContainer.append(upButton);
+        voteContainer.append(downButton);
+
+        voteDateContainer.append(voteContainer);
+        voteDateContainer.append(postDateLabel);
+
+        li.append(postTitleContainer);
+        // li.append(postUsernameContainer);
         li.append(postImage);
-        li.append(br.cloneNode(true));
-        li.append(upButton);
-        li.append(downButton);
-        li.append(br.cloneNode(true));
-        li.append(br.cloneNode(true));
+        li.append(voteDateContainer);
+
+        li.setAttribute("class", "post-item");
+        downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
 
         upButton.addEventListener("click", async function () {
             onAuthStateChanged(auth, async (_user) => {
@@ -108,22 +144,26 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 isPostUpVoted = true
                             }
                         }
-                        
+
                         if (isPostUpVoted === true) {
                             await updateDoc(doc(firestore, "posts", _post.id), {
                                 up_count: post.up_count - 1,
                             }).then(async () => {
-                                
+
                                 await updateDoc(doc(firestore, "users", _user.email), {
                                     up_posts: arrayRemove(_post.id)
                                 }).then(async () => {
-                                    
+
                                     console.log(user.up_posts.length + " - UpVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id)).then((_updatedPost) => {
-                                        
+
                                         post = _updatedPost.data();
-                                        upButton.textContent = _updatedPost.data().up_count + " Ups";
+                                        
+                                        upButton.textContent = _updatedPost.data().up_count + " ";
                                         upButton.setAttribute("class", "unselected");
+
+                                        upButton.append(upFontAwesome);
+                                        downButton.append(downFontAwesome);
                                     }).catch((error) => {
                                         console.log("Could not get post after upvote update - " + error);
                                     });
@@ -135,7 +175,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                             });
 
                         } else {
-                            
+
                             var downCount = post.down_count;
                             for (let i = 0; i < user.down_posts.length; i++) {
                                 if (_post.id === user.down_posts[i]) {
@@ -146,23 +186,27 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 up_count: post.up_count + 1,
                                 down_count: downCount
                             }).then(async () => {
-                                
+
                                 console.log("UpCount updated successfully");
                                 await updateDoc(doc(firestore, "users", _user.email), {
                                     up_posts: arrayUnion(_post.id),
                                     down_posts: arrayRemove(_post.id)
                                 }).then(async () => {
-                                    
+
                                     console.log(user.up_posts.length + " - UpVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id))
                                         .then((_updatedPost) => {
-                                            
+
                                             post = _updatedPost.data();
-                                            upButton.textContent = _updatedPost.data().up_count + " Ups";
-                                            downButton.textContent = _updatedPost.data().down_count + " Downs";
+                                            
+                                            upButton.textContent = _updatedPost.data().up_count + " ";
+                                            downButton.textContent = _updatedPost.data().down_count + " ";
 
                                             upButton.setAttribute("class", "selected");
                                             downButton.setAttribute("class", "unselected");
+
+                                            upButton.append(upFontAwesome);
+                                            downButton.append(downFontAwesome);
                                         }).catch((error) => {
                                             console.log("Could not get post after upvote update - " + error);
                                         });
@@ -194,23 +238,27 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 isPostDownVoted = true
                             }
                         }
-                        
+
                         if (isPostDownVoted === true) {
                             await updateDoc(doc(firestore, "posts", _post.id), {
                                 down_count: post.down_count - 1,
                             }).then(async () => {
-                                
+
                                 await updateDoc(doc(firestore, "users", _user.email), {
                                     down_posts: arrayRemove(_post.id)
                                 }).then(async () => {
-                                    
+
                                     console.log(user.down_posts.length + " - DownVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id)).then((_updatedPost) => {
-                                        
+
                                         post = _updatedPost.data();
-                                        downButton.textContent = _updatedPost.data().down_count + " Downs";
+                                        
+                                        downButton.textContent = _updatedPost.data().down_count + " ";
 
                                         downButton.setAttribute("class", "unselected");
+
+                                        upButton.append(upFontAwesome);
+                                            downButton.append(downFontAwesome);
                                     }).catch((error) => {
                                         console.log("Could not get post after upvote update - " + error);
                                     });
@@ -222,7 +270,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                             });
 
                         } else {
-                            
+
                             var upCount = post.up_count;
                             for (let i = 0; i < user.up_posts.length; i++) {
                                 if (_post.id === user.up_posts[i]) {
@@ -233,22 +281,26 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                                 down_count: post.down_count + 1,
                                 up_count: upCount
                             }).then(async () => {
-                                
+
                                 await updateDoc(doc(firestore, "users", _user.email), {
                                     down_posts: arrayUnion(_post.id),
                                     up_posts: arrayRemove(_post.id)
                                 }).then(async () => {
-                                    
+
                                     console.log(user.down_posts.length + " - DownVote successfully updated for user");
                                     await getDoc(doc(firestore, "posts", _post.id))
                                         .then((_updatedPost) => {
-                                            
+
                                             post = _updatedPost.data();
-                                            downButton.textContent = _updatedPost.data().down_count + " Downs";
-                                            upButton.textContent = _updatedPost.data().up_count + " Ups";
+                                            
+                                            downButton.textContent = _updatedPost.data().down_count + " ";
+                                            upButton.textContent = _updatedPost.data().up_count + " ";
 
                                             upButton.setAttribute("class", "unselected");
                                             downButton.setAttribute("class", "selected");
+
+                                            upButton.append(upFontAwesome);
+                                            downButton.append(downFontAwesome);
                                         }).catch((error) => {
                                             console.log("Could not get post after upvote update - " + error);
                                         });
@@ -274,10 +326,34 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
     document.getElementById("all-post-loading").style.display = "none";
 });
 
-document.getElementById('profile-sign-out').addEventListener('click', function () {
+function getPostAgeString(postDate, referenceDate = new Date()) {
+    postDate = new Date(postDate);
+    referenceDate = new Date(referenceDate);
+
+    let diffMs = referenceDate - postDate; // Difference in milliseconds
+    let minutes = Math.floor(diffMs / (1000 * 60));
+    let hours = Math.floor(diffMs / (1000 * 60 * 60));
+    let days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    let weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
+    let years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
+
+    if (years > 0) return `${years} year${years > 1 ? 's' : ''} ago`;
+    if (weeks > 0) return `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    if (days > 0) return `${days} day${days > 1 ? 's' : ''} ago`;
+    if (hours > 0) return `${hours} hour${hours > 1 ? 's' : ''} ago`;
+    if (minutes > 0) return `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+
+    return "Just now";
+}
+
+document.getElementById('home-sign-out').addEventListener('click', function () {
     signOut(auth).then(() => {
         location.href = "index.html";
     }).catch((error) => {
         console.log(error);
     });
+})
+
+document.getElementById('home-profile').addEventListener('click', function () {
+    location.href = "profile.html";
 })

@@ -5,55 +5,425 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>7gag - Profile</title>
+    <script src="https://kit.fontawesome.com/0af1729e03.js" crossorigin="anonymous"></script>
 </head>
 <script type="module" src="js/profile.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+
+<style>
+    *,
+    *:before,
+    *:after {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+    }
+
+    .profile-container {
+        font-family: 'Poppins', sans-serif;
+        height: 150px;
+        width: 500px;
+        text-align: center;
+        border-color: grey;
+        border-style: solid;
+        border-width: 0px;
+        padding: 10px 35px;
+        display: flex;
+        margin-top: 50px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .profile-container>img {
+        width: 120px;
+        height: 120px;
+        margin-right: 20px;
+        border-radius: 50%;
+        object-fit: contain;
+    }
+
+    #profile-tabs {
+        text-align: center;
+    }
+
+    button {
+        background-color: #ffffff;
+        border: 2px solid #080710;
+        font-size: 18px;
+        font-weight: 400;
+        cursor: pointer;
+        padding: 10px 20px;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    button:hover {
+        background-color: #080710;
+        color: #ffffff;
+    }
+
+    h3 {
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 42px;
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .tab-selected {
+        background-color: #080710;
+        color: #ffffff;
+    }
+
+    .tab-unselected {
+        background-color: #fff;
+        color: #080710;
+    }
+
+    #welcome-user {
+        font-size: 28px;
+        font-weight: 400;
+    }
+
+    #profile-description {
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    #active-since {
+        color: #797979;
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    .home-btn {
+        margin: 0px;
+        border: none;
+    }
+
+    #profile-sign-out {
+        font-size: 14px;
+    }
+
+    #profile-sign-out:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    form {
+        height: 550px;
+        width: 500px;
+        margin-right: auto;
+        margin-left: auto;
+        border-color: #797979;
+        border-style: solid;
+        border-width: 1px;
+        padding: 20px 35px;
+    }
+
+    form * {
+        font-family: 'Poppins', sans-serif;
+        letter-spacing: 0.5px;
+    }
+
+    form>label {
+        display: block;
+        margin-top: 20px;
+        font-size: 16px;
+        font-weight: 500;
+    }
+
+    ::placeholder {
+        color: #797979;
+    }
+
+    form>input {
+        display: block;
+        height: 50px;
+        width: 100%;
+        color: #080710;
+        border-style: solid;
+        border-width: 1px;
+        border-color: #a8a8a8;
+        padding: 0 10px;
+        margin-top: 8px;
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    #my-posts-list {
+        text-align: center;
+    }
+
+    .submit-button {
+        width: 100%;
+        margin-top: 30px;
+    }
+
+    #upload-post-image-preview {
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 20px;
+        width: 300px;
+        height: 300px;
+        object-fit: contain;
+    }
+
+    .upload-btn {
+        background-color: #fff;
+        color: white;
+        padding: 8px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: 0.3s;
+        display: inline-block;
+    }
+
+    #upload-new-posts-container {
+        height: 100vh;
+        width: 100%;
+        align-items: center;
+        display: flex;
+        justify-content: center;
+        background-color: #fff;
+    }
+
+    .card {
+        border-color: #797979;
+        border-style: solid;
+        border-width: 1px;
+        width: 600px;
+        height: 260px;
+        background-color: #ffffff;
+        padding: 10px 30px 40px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .card h3 {
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    .drop_box {
+        margin: 10px 0;
+        padding: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        border: 3px dotted #a3a3a3;
+        border-radius: 5px;
+    }
+
+    .drop_box h4 {
+        font-size: 16px;
+        font-weight: 400;
+        color: #2e2e2e;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .drop_box p {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        font-size: 12px;
+        color: #a3a3a3;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 100;
+    }
+
+    .btn {
+        text-decoration: none;
+        background-color: #ffffff;
+        color: #080710;
+        padding: 10px 20px;
+        border: none;
+        outline: 1px solid #080710;
+    }
+
+    .btn:hover {
+        text-decoration: none;
+        background-color: #080710;
+        color: #ffffff;
+        padding: 10px 20px;
+        border: none;
+        outline: none;
+        transition: 0.3s;
+    }
+
+    .form input {
+        margin: 10px 0;
+        width: 100%;
+        background-color: #e2e2e2;
+        border: none;
+        outline: none;
+        padding: 12px 20px;
+        border-radius: 4px;
+    }
+
+    ul {
+        text-align: center;
+        list-style-type: none;
+    }
+
+    .post-item {
+        border-style: solid;
+        border-width: 1px;
+        border-color: #080710;
+        width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-family: 'Poppins', sans-serif;
+        padding: 20px;
+    }
+
+    .post-title-container {
+        text-align: left;
+    }
+
+    .post-title {
+        font-size: 20px;
+        font-weight: 600;
+        padding: 0 10px;
+    }
+
+    .post-item>img {
+        width: 550px;
+    }
+
+    .post-up-btn {
+        font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .post-up-btn>i {
+        width: 20px;
+        margin: 0 2px;
+    }
+
+    .post-down-btn {
+        font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .post-down-btn>i {
+        width: 20px;
+        margin: 0 2px;
+    }
+
+    .post-up-btn:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .post-down-btn:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .vote-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .vote-date-container {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .post-age {
+        font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .selected {
+        color: #448AFF;
+        font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+
+    .unselected {
+        color: #797979;
+        font-weight: 300;
+        padding: 0 10px;
+        font-size: 14px;
+    }
+</style>
 
 <body>
-    <button id='profile-home-button'>Home</button>
-    <img src="https://firebasestorage.googleapis.com/v0/b/one-5769e.firebasestorage.app/o/user_placeholder.jpg?alt=media&token=356c6aa7-a290-4167-a0c6-e9f72bef8909"
-        id='user-display-picture' width="20%" height="20%" />
-    <br />
-    <h1 id="welcome-user">Loading...</h1>
-    <label id="profile-description"></label>
-    <br />
-    <label id="active-since"></label>
-
-    <br />
-    <br />
-    <button id='my-posts-button'>My Posts</button>
-    <button id='my-comments-button' style="display: none;">Saved</button>
-    <button id='my-upvotes-button'>My Upvotes</button>
-    <button id='upload-posts-button'>Upload Post</button>
-
+    <div class="profile-container">
+        <button class="home-btn" id='profile-home-button'><i class="fa-solid fa-chevron-left fa-2xl"></i></button>
+        <img src="images/user.png" id='user-display-picture' />
+        <div>
+            <label id="welcome-user">Loading...</label>
+            <hr>
+            <p><label id="active-since"></label></p>
+            <p><label id="profile-description"></label></p>
+            <label id='profile-sign-out'>Sign Out</label>
+        </div>
+    </div>
+    <div id="profile-tabs">
+        <button id='my-posts-button'>My Posts</button>
+        <button id='my-comments-button' style="display: none;">Saved</button>
+        <button id='my-upvotes-button'>My Ups</button>
+        <button id='upload-posts-button'>Upload Post</button>
+        <button id='upload-new-posts-button' style="display: none;">Upload Post New</button>
+    </div>
     <div id="my-posts-container" style="display: none;">
-        <h3 id="welcome-user">My Posts</h3>
+        <br />
         <ul id="my-posts-list">
             <li>No results</li>
         </ul>
     </div>
 
     <div id="my-comments-container" style="display: none;">
+        <br />
         <h3 id="welcome-user">Saved Posts </h3>
     </div>
 
     <div id="my-upvotes-container" style="display: none;">
-        <h3 id="welcome-user">My Upvotes</h3>
+        <br />
+        <ul id="my-upvoted-posts-list">
+            <li>No results</li>
+        </ul>
+    </div>
+
+    <div id="upload-new-posts-container" style="display: none;">
+        <br />
+        <div class="card">
+            <h3>Upload Files</h3>
+            <div class="drop_box">
+                <header>
+                    <h4>Select File here</h4>
+                </header>
+                <p>Max size 5 MB</p>
+                <input type="file" hidden accept="image/*" id="fileID" style="display:none;">
+                <button class="btn">Choose File</button>
+            </div>
+        </div>
     </div>
 
     <div id="upload-posts-container" style="display: none;">
-        <h3 id="welcome-user">Upload Post</h3>
+        <br />
         <form id="upload-post-form">
             <label for="upload-post-title">Post Title: </label>
-            <input id="upload-post-title" type="text" name="upload-post-title" required />
+            <input id="upload-post-title" type="text" name="upload-post-title" required
+                placeholder="Enter post title. Max 500 characters" />
             <br />
             <label for="upload-post-image-file-selector">Choose an image to upload:</label>
             <input type="file" id="upload-post-image-file-selector" name="upload-post-image-file-selector"
-                accept="image/*" required>
-            <button type="submit">Submit</button>
+                accept="image/*" value="Select an image" class="upload-btn" required>
             <img id="upload-post-image-preview" src="#" alt="Image Preview" style="display:none;" />
+            <button type="submit" class="submit-button">Submit</button>
         </form>
     </div>
-    <button id='profile-sign-out'>Sign Out</button>
 </body>
 
 </html>
