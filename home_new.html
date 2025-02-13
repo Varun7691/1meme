@@ -100,11 +100,11 @@
         font-size: 14px;
     }
 
-    #home-profile:hover,
-    #home-sign-out:hover,
-    .post-up-btn:hover,
-    .post-down-btn:hover,
-    .selected:hover, 
+    .selected:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
     .unselected:hover {
         text-decoration: underline;
         cursor: pointer;
@@ -140,10 +140,20 @@
         padding: 0 10px;
     }
 
+    #home-profile:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
     #home-sign-out {
         font-size: 18px;
         color: #080710;
         padding: 0 10px;
+    }
+
+    #home-sign-out:hover {
+        text-decoration: underline;
+        cursor: pointer;
     }
 
     .vote-date-container {
@@ -169,7 +179,11 @@
         align-items: center;
     }
 
-    #btn_prev:hover,
+    #btn_prev:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
     #btn_next:hover {
         text-decoration: underline;
         cursor: pointer;
@@ -211,7 +225,7 @@
 <body>
     <div class="header-container">
         <div>
-            <h1>7gag</h1>
+            <h1>7gag - Test</h1>
         </div>
         <div class="header-buttons-container">
             <label id='home-profile'>Profile</label>
