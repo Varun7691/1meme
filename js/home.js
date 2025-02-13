@@ -40,7 +40,6 @@ var user = "";
 
 // Firestore
 const firestore = getFirestore(app, "nineone");
-let br = document.createElement("br");
 
 // Get all posts
 const allPostsQuery = query(
@@ -180,7 +179,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                       .then(async () => {
                         console.log(
                           user.up_posts.length +
-                            " - UpVote successfully updated for user"
+                          " - UpVote successfully updated for user"
                         );
                         await getDoc(doc(firestore, "posts", _post.id))
                           .then((_updatedPost) => {
@@ -196,7 +195,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                           .catch((error) => {
                             console.log(
                               "Could not get post after upvote update - " +
-                                error
+                              error
                             );
                           });
                       })
@@ -229,7 +228,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                       .then(async () => {
                         console.log(
                           user.up_posts.length +
-                            " - UpVote successfully updated for user"
+                          " - UpVote successfully updated for user"
                         );
                         await getDoc(doc(firestore, "posts", _post.id))
                           .then((_updatedPost) => {
@@ -249,7 +248,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                           .catch((error) => {
                             console.log(
                               "Could not get post after upvote update - " +
-                                error
+                              error
                             );
                           });
                       })
@@ -298,7 +297,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                       .then(async () => {
                         console.log(
                           user.down_posts.length +
-                            " - DownVote successfully updated for user"
+                          " - DownVote successfully updated for user"
                         );
                         await getDoc(doc(firestore, "posts", _post.id))
                           .then((_updatedPost) => {
@@ -315,7 +314,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                           .catch((error) => {
                             console.log(
                               "Could not get post after upvote update - " +
-                                error
+                              error
                             );
                           });
                       })
@@ -347,7 +346,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                       .then(async () => {
                         console.log(
                           user.down_posts.length +
-                            " - DownVote successfully updated for user"
+                          " - DownVote successfully updated for user"
                         );
                         await getDoc(doc(firestore, "posts", _post.id))
                           .then((_updatedPost) => {
@@ -367,7 +366,7 @@ allPostsQueryQuerySnapshot.forEach(async (_post) => {
                           .catch((error) => {
                             console.log(
                               "Could not get post after upvote update - " +
-                                error
+                              error
                             );
                           });
                       })
