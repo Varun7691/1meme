@@ -46,27 +46,24 @@ var user = "";
 const firestore = getFirestore(app, "nineone");
 
 const pageSize = 3;
-let firstDoc = null;
-let lastDoc = null;
-let hasNextPage = false;
-let pageStack = [];
+let firstVisible = null;
+let lastVisible = null;
+let isFirstPage = true;
+let isLastPage = false;
 
 async function getData(direction) {
     let paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on"), limit(pageSize));
 
-    if (direction === "next" && lastDoc) {
-        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on"), startAfter(lastDoc), limit(pageSize));
-    } else if (direction === "prev" && pageStack.length > 1) {
-        pageStack.pop();
-        const prevPage = pageStack[pageStack.length - 1];
-
-        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on"), startAt(prevPage), limitToLast(pageSize));
+    if (direction === "next" && lastVisible) {
+        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on"), startAfter(lastVisible), limit(pageSize));
+    } else if (direction === "prev" && firstVisible) {
+        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on"), endBefore(firstVisible), limitToLast(pageSize));
     }
 
     const snapshot = await getDocs(paginatedPostsquery);
     if (!snapshot.empty) {
-        firstDoc = snapshot.docs[0];
-        lastDoc = snapshot.docs[snapshot.docs.length - 1];
+        firstVisible = snapshot.docs[0];
+        lastVisible = snapshot.docs[snapshot.docs.length - 1];
         updateButton();
     }
 
@@ -75,10 +72,6 @@ async function getData(direction) {
     snapshot.forEach((_post) => {
         renderUI(_post);
     });
-
-    if (direction === "next") {
-        pageStack.push(firstDoc);
-    }
 }
 
 async function renderUI(_post) {
@@ -434,18 +427,21 @@ function setVotesByUser(_post, upButton, downButton) {
 }
 
 async function updateButton() {
-    debugger;
-    const nextPageQuery = query(collection(firestore, "posts"), orderBy("created_on"), startAfter(lastDoc), limit(1));
-    const nextPageSnapshot = await getDocs(nextPageQuery);
-    hasNextPage = !nextPageSnapshot.empty;
+    const firstQuery = query(collection(firestore, "posts"), orderBy("created_on"), limit(1));
+    const firstQuerySnapshot = await getDocs(firstQuery);    
+    isFirstPage = firstQuerySnapshot.docs[0]?.id === firstVisible.id;
 
-    if (nextPageSnapshot.empty) {
+    const nextPageQuery = query(collection(firestore, "posts"), orderBy("created_on"), startAfter(lastVisible), limit(1));
+    const nextPageSnapshot = await getDocs(nextPageQuery);    
+    isLastPage = nextPageSnapshot.empty;
+
+    if (isLastPage) {
         document.getElementById("btn_next").style.display = "none";
     } else {
         document.getElementById("btn_next").style.display = "block";
     }
 
-    if (pageStack.length <= 1) {
+    if (isFirstPage) {
         document.getElementById("btn_prev").style.display = "none";
     } else {
         document.getElementById("btn_prev").style.display = "block";
@@ -453,6 +449,7 @@ async function updateButton() {
 }
 
 document.getElementById("btn_next").addEventListener("click", () => {
+    isFirstPage = false;
     getData("next");
 });
 document.getElementById("btn_prev").addEventListener("click", () => {
