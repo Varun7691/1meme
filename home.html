@@ -7,7 +7,7 @@
     <title>7gag</title>
     <script src="https://kit.fontawesome.com/0af1729e03.js" crossorigin="anonymous"></script>
 </head>
-<script type="module" src="js/home.js"></script>
+<script type="module" src="js/home_new.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
 
 <style>
@@ -17,6 +17,10 @@
         padding: 0;
         margin: 0;
         box-sizing: border-box;
+    }
+
+    body{
+        padding-bottom: 20px;
     }
 
     ul {
@@ -96,11 +100,11 @@
         font-size: 14px;
     }
 
-    .selected:hover {
-        text-decoration: underline;
-        cursor: pointer;
-    }
-
+    #home-profile:hover,
+    #home-sign-out:hover,
+    .post-up-btn:hover,
+    .post-down-btn:hover,
+    .selected:hover, 
     .unselected:hover {
         text-decoration: underline;
         cursor: pointer;
@@ -136,20 +140,10 @@
         padding: 0 10px;
     }
 
-    #home-profile:hover {
-        text-decoration: underline;
-        cursor: pointer;
-    }
-
     #home-sign-out {
         font-size: 18px;
         color: #080710;
         padding: 0 10px;
-    }
-
-    #home-sign-out:hover {
-        text-decoration: underline;
-        cursor: pointer;
     }
 
     .vote-date-container {
@@ -161,6 +155,56 @@
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
+    }
+
+    .pagination-container {
+        position: relative;
+        width: 500px;
+        height: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    #btn_prev:hover,
+    #btn_next:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    #btn_prev,
+    #btn_next {
+        width: auto;
+        position: absolute;
+        top: 30%;
+        transform: translateY(-50%);
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        background-color: #fff;
+        border: 2px solid #080710;
+        color: #080710;
+    }
+
+    #btn_prev:hover,
+    #btn_next:hover {
+        background-color: #080710;
+        color: #ffffff;
+    }
+
+
+    #btn_prev {
+        left: 0;
+        display: none;
+    }
+
+    #btn_next {
+        right: 0;
+        display: none;
     }
 </style>
 
@@ -176,6 +220,10 @@
     </div>
     <label id="all-post-loading">Loading...</label>
     <ul id="all-posts-list"></ul>
+    <div class="pagination-container">
+        <button id="btn_prev"><i class="fa-solid fa-left-long"></i></button>
+        <button id="btn_next"><i class="fa-solid fa-right-long"></i></button>
+    </div>
 </body>
 
 </html>

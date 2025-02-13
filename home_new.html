@@ -19,6 +19,10 @@
         box-sizing: border-box;
     }
 
+    body{
+        padding-bottom: 20px;
+    }
+
     ul {
         text-align: center;
         list-style-type: none;
@@ -164,10 +168,15 @@
     }
 
     .pagination-container {
-        display: flex;
-        justify-content: space-between;
-        margin: auto;
+        position: relative;
         width: 500px;
+        height: 50px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     #btn_prev:hover {
@@ -178,6 +187,38 @@
     #btn_next:hover {
         text-decoration: underline;
         cursor: pointer;
+    }
+
+    #btn_prev,
+    #btn_next {
+        width: auto;
+        position: absolute;
+        top: 30%;
+        transform: translateY(-50%);
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border: none;
+        background-color: #fff;
+        border: 2px solid #080710;
+        color: #080710;
+    }
+
+    #btn_prev:hover,
+    #btn_next:hover {
+        background-color: #080710;
+        color: #ffffff;
+    }
+
+
+    #btn_prev {
+        left: 0;
+        display: none;
+    }
+
+    #btn_next {
+        right: 0;
+        display: none;
     }
 </style>
 
@@ -192,11 +233,11 @@
         </div>
     </div>
     <label id="all-post-loading">Loading...</label>
-    <div class="pagination-container">
-        <label id="btn_prev">Prev</label>
-        <label id="btn_next">Next</label>
-    </div>
     <ul id="all-posts-list"></ul>
+    <div class="pagination-container">
+        <button id="btn_prev"><i class="fa-solid fa-left-long"></i></button>
+        <button id="btn_next"><i class="fa-solid fa-right-long"></i></button>
+    </div>
 </body>
 
 </html>

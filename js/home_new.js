@@ -45,19 +45,19 @@ var user = "";
 // Firestore
 const firestore = getFirestore(app, "nineone");
 
-const pageSize = 3;
+const pageSize = 7;
 let firstVisible = null;
 let lastVisible = null;
 let isFirstPage = true;
 let isLastPage = false;
 
 async function getData(direction) {
-    let paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on"), limit(pageSize));
+    let paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on","desc"), limit(pageSize));
 
     if (direction === "next" && lastVisible) {
-        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on"), startAfter(lastVisible), limit(pageSize));
+        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on","desc"), startAfter(lastVisible), limit(pageSize));
     } else if (direction === "prev" && firstVisible) {
-        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on"), endBefore(firstVisible), limitToLast(pageSize));
+        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on","desc"), endBefore(firstVisible), limitToLast(pageSize));
     }
 
     const snapshot = await getDocs(paginatedPostsquery);
@@ -427,12 +427,12 @@ function setVotesByUser(_post, upButton, downButton) {
 }
 
 async function updateButton() {
-    const firstQuery = query(collection(firestore, "posts"), orderBy("created_on"), limit(1));
-    const firstQuerySnapshot = await getDocs(firstQuery);    
+    const firstQuery = query(collection(firestore, "posts"), orderBy("created_on","desc"), limit(1));
+    const firstQuerySnapshot = await getDocs(firstQuery);
     isFirstPage = firstQuerySnapshot.docs[0]?.id === firstVisible.id;
 
-    const nextPageQuery = query(collection(firestore, "posts"), orderBy("created_on"), startAfter(lastVisible), limit(1));
-    const nextPageSnapshot = await getDocs(nextPageQuery);    
+    const nextPageQuery = query(collection(firestore, "posts"), orderBy("created_on","desc"), startAfter(lastVisible), limit(1));
+    const nextPageSnapshot = await getDocs(nextPageQuery);
     isLastPage = nextPageSnapshot.empty;
 
     if (isLastPage) {

@@ -40,7 +40,7 @@ form.addEventListener("submit", function (event) {
       // Signed in
       const user = userCredential.user;
       localStorage.setItem("authenticatedUser", JSON.stringify(user));
-      location.href = "home_new.html";
+      location.href = "home.html";
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -54,7 +54,7 @@ document.getElementById("signup-button").onclick = function () {
 };
 
 document.getElementById("guest-button").onclick = function () {
-  location.href = "home_new.html";
+  location.href = "home.html";
 };
 
 document.getElementById("forgot-password-btn").onclick = function () {
