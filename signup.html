@@ -10,6 +10,13 @@
 
 <script type="module" src="js/signup.js"></script>
 <style>
+    :root {
+        --accent-color: #FFD740;
+        --primary-color: #080710;
+        --secondary-color: #fff;
+        --grey: #797979;
+    }
+
     *,
     *:before,
     *:after {
@@ -35,7 +42,7 @@
         top: 50%;
         left: 50%;
         backdrop-filter: blur(10px);
-        border-color: grey;
+        border-color: var(--grey);
         border-style: solid;
         border-width: 1px;
         padding: 20px 35px;
@@ -64,10 +71,10 @@
         display: block;
         height: 50px;
         width: 100%;
-        color: black;
+        color: var(--primary-color);
         border-style: solid;
         border-width: 1px;
-        border-color: #a8a8a8;
+        border-color: var(--grey);
         padding: 0 10px;
         margin-top: 8px;
         font-size: 14px;
@@ -75,15 +82,15 @@
     }
 
     ::placeholder {
-        color: #797979;
+        color: var(--grey);
     }
 
     button {
         margin-top: 30px;
         width: 100%;
-        background-color: #ffffff;
-        border: 2px solid black;
-        color: #080710;
+        background-color: var(--secondary-color);
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
         padding: 15px 0;
         font-size: 18px;
         font-weight: 400;
@@ -91,8 +98,8 @@
     }
 
     button:hover {
-        background-color: #080710;
-        color: #ffffff;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
     }
 </style>
 

@@ -13,6 +13,13 @@
     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
 
 <style>
+    :root {
+        --accent-color: #FFD740;
+        --primary-color: #080710;
+        --secondary-color: #fff;
+        --grey: #797979;
+    }
+
     *,
     *:before,
     *:after {
@@ -34,7 +41,7 @@
     .post-item {
         border-style: solid;
         border-width: 1px;
-        border-color: #080710;
+        border-color: var(--primary-color);
         width: 600px;
         margin-left: auto;
         margin-right: auto;
@@ -71,12 +78,12 @@
     .post-user {
         font-size: 14px;
         font-weight: 100;
-        color: #797979;
+        color: var(--grey);
         margin-bottom: 10px;
     }
 
     .selected {
-        color: #448AFF;
+        color: var(--accent-color);
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
@@ -86,18 +93,18 @@
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
-        color: #080710;
+        color: var(--primary-color);
     }
 
     .post-down-btn {
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
-        color: #080710;
+        color: var(--primary-color);
     }
 
     .unselected {
-        color: #080710;
+        color: var(--primary-color);
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
@@ -127,9 +134,9 @@
 
     button {
         width: 100%;
-        background-color: #ffffff;
-        border: 2px solid #080710;
-        color: #080710;
+        background-color: var(--secondary-color);
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
         padding: 10px 0;
         font-size: 18px;
         font-weight: 300;
@@ -138,19 +145,19 @@
     }
 
     button:hover {
-        background-color: #080710;
-        color: #ffffff;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
     }
 
     #home-profile {
         font-size: 18px;
-        color: #080710;
+        color: var(--primary-color);
         padding: 0 10px;
     }
 
     #home-sign-out {
         font-size: 18px;
-        color: #080710;
+        color: var(--primary-color);
         padding: 0 10px;
     }
 
@@ -193,15 +200,15 @@
         font-size: 16px;
         cursor: pointer;
         border: none;
-        background-color: #fff;
-        border: 2px solid #080710;
-        color: #080710;
+        background-color: var(--secondary-color);
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
     }
 
     #btn_prev:hover,
     #btn_next:hover {
-        background-color: #080710;
-        color: #ffffff;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
     }
 
 
@@ -230,17 +237,17 @@
         bottom: 40px;
         right: 300px;
         text-align: center;
-        background-color: #fff;
-        color: #448AFF;
-        border: 2px solid #448AFF;
+        background-color: var(--secondary-color);
+        color: var(--accent-color);
+        border: 2px solid var(--accent-color);
         font-family: 'Poppins', sans-serif;
         font-weight: 600;
     }
 
     #home-upload-post-btn:hover {
-        background-color: #448AFF;
-        color: #fff;
-        border: 2px solid #fff;
+        background-color: var(--accent-color);
+        color: var(--secondary-color);
+        border: 2px solid var(--secondary-color);
     }
 
     .modal {
@@ -258,10 +265,10 @@
     }
 
     .modal-content {
-        background-color: #fefefe;
+        background-color: var(--secondary-color);
         margin: auto;
         padding: 20px;
-        border: 1px solid #888;
+        border: 1px solid var(--grey);
         width: 550px;
         font-family: 'Poppins', sans-serif;
     }
@@ -286,7 +293,7 @@
     }
 
     ::placeholder {
-        color: #797979;
+        color: var(--grey);
     }
 
     #home-upload-post-form {
@@ -317,11 +324,11 @@
         display: block;
         height: 50px;
         width: 100%;
-        color: #080710;
+        color: var(--primary-color);
         border-style: solid;
         border-width: 1px;
         margin-top: 10px;
-        border-color: #a8a8a8;
+        border-color: var(--grey);
         padding: 0 10px;
         font-size: 14px;
         font-weight: 300;
@@ -329,9 +336,9 @@
 
     #home-upload-post-form>button {
         width: 100%;
-        background-color: #ffffff;
-        border: 2px solid #080710;
-        color: #080710;
+        background-color: var(--secondary-color);
+        border: 2px solid var(--primary-color);
+        color: var(--primary-color);
         padding: 10px 0;
         font-size: 18px;
         font-weight: 300;
@@ -341,8 +348,8 @@
     }
 
     #home-upload-post-form>button:hover {
-        background-color: #080710;
-        color: #fff;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
     }
 
     #home-upload-post-image-preview {
