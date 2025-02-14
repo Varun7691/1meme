@@ -165,8 +165,6 @@ async function renderUI(_post) {
         upButton.addEventListener("click", async function () {
             onAuthStateChanged(auth, async (_user) => {
                 if (_user) {
-                    console.log(_user);
-
                     await getDoc(doc(firestore, "users", _user.email))
                         .then(async (_usersDocument) => {
                             user = _usersDocument.data();
@@ -186,10 +184,6 @@ async function renderUI(_post) {
                                             up_posts: arrayRemove(_post.id),
                                         })
                                             .then(async () => {
-                                                console.log(
-                                                    user.up_posts.length +
-                                                    " - UpVote successfully updated for user"
-                                                );
                                                 await getDoc(doc(firestore, "posts", _post.id))
                                                     .then((_updatedPost) => {
                                                         post = _updatedPost.data();
@@ -229,16 +223,11 @@ async function renderUI(_post) {
                                     down_count: downCount,
                                 })
                                     .then(async () => {
-                                        console.log("UpCount updated successfully");
                                         await updateDoc(doc(firestore, "users", _user.email), {
                                             up_posts: arrayUnion(_post.id),
                                             down_posts: arrayRemove(_post.id),
                                         })
                                             .then(async () => {
-                                                console.log(
-                                                    user.up_posts.length +
-                                                    " - UpVote successfully updated for user"
-                                                );
                                                 await getDoc(doc(firestore, "posts", _post.id))
                                                     .then((_updatedPost) => {
                                                         post = _updatedPost.data();
@@ -304,10 +293,7 @@ async function renderUI(_post) {
                                             down_posts: arrayRemove(_post.id),
                                         })
                                             .then(async () => {
-                                                console.log(
-                                                    user.down_posts.length +
-                                                    " - DownVote successfully updated for user"
-                                                );
+
                                                 await getDoc(doc(firestore, "posts", _post.id))
                                                     .then((_updatedPost) => {
                                                         post = _updatedPost.data();
@@ -353,10 +339,6 @@ async function renderUI(_post) {
                                             up_posts: arrayRemove(_post.id),
                                         })
                                             .then(async () => {
-                                                console.log(
-                                                    user.down_posts.length +
-                                                    " - DownVote successfully updated for user"
-                                                );
                                                 await getDoc(doc(firestore, "posts", _post.id))
                                                     .then((_updatedPost) => {
                                                         post = _updatedPost.data();
@@ -562,13 +544,9 @@ function canPost(oldDate, newDate) {
 const uploadForm = document.getElementById("home-upload-post-form");
 uploadForm.addEventListener("submit", async function (event) {
     event.preventDefault();
-    debugger;
-
     if (user.emailVerified) {
         await getDoc(doc(firestore, "users", user.email))
             .then((_userDocument) => {
-                debugger;
-                console.log(_userDocument.data().last_uploaded);
                 const user = _userDocument.data();
 
                 //https://stackoverflow.com/a/7709819
@@ -612,8 +590,6 @@ uploadForm.addEventListener("submit", async function (event) {
                         () => {
                             getDownloadURL(uploadTask.snapshot.ref).then(
                                 async (downloadURL) => {
-                                    debugger;
-                                    console.log("File available at", downloadURL);
                                     const postTitle =
                                         document.getElementById("upload-post-title").value;
                                     await setDoc(doc(firestore, "posts", postFileName), {
@@ -625,16 +601,12 @@ uploadForm.addEventListener("submit", async function (event) {
                                         created_on: Timestamp.fromDate(new Date()),
                                     })
                                         .then(async (setPost) => {
-                                            console.log("Post uploaded successfully.");
+
                                             await updateDoc(doc(firestore, "users", user.email), {
                                                 last_uploaded: Timestamp.fromDate(new Date()),
                                             })
                                                 .then((_updatedUser) => {
                                                     location.reload();
-                                                    console.log(
-                                                        "Last Uploaded time updated successfully - " +
-                                                        _updatedUser.date().last_uploaded
-                                                    );
                                                 })
                                                 .catch((error) => {
                                                     console.log(error);

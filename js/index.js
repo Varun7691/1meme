@@ -70,7 +70,6 @@ const validateEmail = (email) => {
 const forgotPasswordform = document.getElementById("forgot-password-form");
 forgotPasswordform.addEventListener("submit", function (event) {
   event.preventDefault();
-  debugger;
   const email = document.getElementById("forgot-password-email").value;
   if (validateEmail(email)) {
     sendPasswordResetEmail(auth, email)

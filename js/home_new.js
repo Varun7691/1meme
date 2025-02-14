@@ -52,12 +52,12 @@ let isFirstPage = true;
 let isLastPage = false;
 
 async function getData(direction) {
-    let paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on","desc"), limit(pageSize));
+    let paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), limit(pageSize));
 
     if (direction === "next" && lastVisible) {
-        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on","desc"), startAfter(lastVisible), limit(pageSize));
+        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), startAfter(lastVisible), limit(pageSize));
     } else if (direction === "prev" && firstVisible) {
-        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on","desc"), endBefore(firstVisible), limitToLast(pageSize));
+        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), endBefore(firstVisible), limitToLast(pageSize));
     }
 
     const snapshot = await getDocs(paginatedPostsquery);
@@ -159,8 +159,6 @@ async function renderUI(_post) {
         upButton.addEventListener("click", async function () {
             onAuthStateChanged(auth, async (_user) => {
                 if (_user) {
-                    console.log(_user);
-
                     await getDoc(doc(firestore, "users", _user.email))
                         .then(async (_usersDocument) => {
                             user = _usersDocument.data();
@@ -180,10 +178,6 @@ async function renderUI(_post) {
                                             up_posts: arrayRemove(_post.id),
                                         })
                                             .then(async () => {
-                                                console.log(
-                                                    user.up_posts.length +
-                                                    " - UpVote successfully updated for user"
-                                                );
                                                 await getDoc(doc(firestore, "posts", _post.id))
                                                     .then((_updatedPost) => {
                                                         post = _updatedPost.data();
@@ -223,16 +217,11 @@ async function renderUI(_post) {
                                     down_count: downCount,
                                 })
                                     .then(async () => {
-                                        console.log("UpCount updated successfully");
                                         await updateDoc(doc(firestore, "users", _user.email), {
                                             up_posts: arrayUnion(_post.id),
                                             down_posts: arrayRemove(_post.id),
                                         })
                                             .then(async () => {
-                                                console.log(
-                                                    user.up_posts.length +
-                                                    " - UpVote successfully updated for user"
-                                                );
                                                 await getDoc(doc(firestore, "posts", _post.id))
                                                     .then((_updatedPost) => {
                                                         post = _updatedPost.data();
@@ -298,10 +287,6 @@ async function renderUI(_post) {
                                             down_posts: arrayRemove(_post.id),
                                         })
                                             .then(async () => {
-                                                console.log(
-                                                    user.down_posts.length +
-                                                    " - DownVote successfully updated for user"
-                                                );
                                                 await getDoc(doc(firestore, "posts", _post.id))
                                                     .then((_updatedPost) => {
                                                         post = _updatedPost.data();
@@ -347,10 +332,6 @@ async function renderUI(_post) {
                                             up_posts: arrayRemove(_post.id),
                                         })
                                             .then(async () => {
-                                                console.log(
-                                                    user.down_posts.length +
-                                                    " - DownVote successfully updated for user"
-                                                );
                                                 await getDoc(doc(firestore, "posts", _post.id))
                                                     .then((_updatedPost) => {
                                                         post = _updatedPost.data();
@@ -427,11 +408,11 @@ function setVotesByUser(_post, upButton, downButton) {
 }
 
 async function updateButton() {
-    const firstQuery = query(collection(firestore, "posts"), orderBy("created_on","desc"), limit(1));
+    const firstQuery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), limit(1));
     const firstQuerySnapshot = await getDocs(firstQuery);
     isFirstPage = firstQuerySnapshot.docs[0]?.id === firstVisible.id;
 
-    const nextPageQuery = query(collection(firestore, "posts"), orderBy("created_on","desc"), startAfter(lastVisible), limit(1));
+    const nextPageQuery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), startAfter(lastVisible), limit(1));
     const nextPageSnapshot = await getDocs(nextPageQuery);
     isLastPage = nextPageSnapshot.empty;
 

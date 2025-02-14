@@ -55,7 +55,6 @@ form.addEventListener("submit", async function (event) {
         .then(async (userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(user);
 
           await setDoc(doc(firestore, "users", user.email), {
             display_picture:
@@ -67,7 +66,6 @@ form.addEventListener("submit", async function (event) {
             createdOn: Timestamp.fromDate(new Date()),
           })
             .then((setPost) => {
-              console.log("User added successfully.");
               location.href = "home.html";
             })
             .catch((error) => {

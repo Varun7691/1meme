@@ -324,7 +324,6 @@ uploadForm.addEventListener("submit", async function (event) {
   if (user.emailVerified) {
     await getDoc(doc(firestore, "users", user.email))
       .then((_userDocument) => {
-        console.log(_userDocument.data().last_uploaded);
         const user = _userDocument.data();
 
         //https://stackoverflow.com/a/7709819
@@ -369,7 +368,6 @@ uploadForm.addEventListener("submit", async function (event) {
             () => {
               getDownloadURL(uploadTask.snapshot.ref).then(
                 async (downloadURL) => {
-                  console.log("File available at", downloadURL);
                   const postTitle =
                     document.getElementById("upload-post-title").value;
                   await setDoc(doc(firestore, "posts", postFileName), {
@@ -381,16 +379,12 @@ uploadForm.addEventListener("submit", async function (event) {
                     created_on: Timestamp.fromDate(new Date()),
                   })
                     .then(async (setPost) => {
-                      console.log("Post uploaded successfully.");
-                      location.reload();
+
                       await updateDoc(doc(firestore, "users", user.email), {
                         last_uploaded: Timestamp.fromDate(new Date()),
                       })
                         .then((_updatedUser) => {
-                          console.log(
-                            "Last Uploaded time updated successfully - " +
-                            _updatedUser.date().last_uploaded
-                          );
+                          location.reload();
                         })
                         .catch((error) => {
                           console.log(error);
@@ -453,7 +447,6 @@ button.onclick = () => {
 };
 
 input.addEventListener("change", function (e) {
-  debugger;
   var fileName = e.target.files[0].name;
   let filedata = `
       <form action="" method="post">
