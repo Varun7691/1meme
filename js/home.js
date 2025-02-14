@@ -15,13 +15,19 @@ import {
     startAfter,
     limit,
     endBefore,
-    limitToLast, startAt
+    limitToLast, startAt, Timestamp
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 import {
     getAuth,
     onAuthStateChanged,
     signOut,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
+import {
+    getStorage,
+    ref,
+    uploadBytesResumable,
+    getDownloadURL,
+} from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -52,12 +58,12 @@ let isFirstPage = true;
 let isLastPage = false;
 
 async function getData(direction) {
-    let paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on","desc"), limit(pageSize));
+    let paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), limit(pageSize));
 
     if (direction === "next" && lastVisible) {
-        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on","desc"), startAfter(lastVisible), limit(pageSize));
+        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), startAfter(lastVisible), limit(pageSize));
     } else if (direction === "prev" && firstVisible) {
-        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on","desc"), endBefore(firstVisible), limitToLast(pageSize));
+        paginatedPostsquery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), endBefore(firstVisible), limitToLast(pageSize));
     }
 
     const snapshot = await getDocs(paginatedPostsquery);
@@ -427,11 +433,11 @@ function setVotesByUser(_post, upButton, downButton) {
 }
 
 async function updateButton() {
-    const firstQuery = query(collection(firestore, "posts"), orderBy("created_on","desc"), limit(1));
+    const firstQuery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), limit(1));
     const firstQuerySnapshot = await getDocs(firstQuery);
     isFirstPage = firstQuerySnapshot.docs[0]?.id === firstVisible.id;
 
-    const nextPageQuery = query(collection(firestore, "posts"), orderBy("created_on","desc"), startAfter(lastVisible), limit(1));
+    const nextPageQuery = query(collection(firestore, "posts"), orderBy("created_on", "desc"), startAfter(lastVisible), limit(1));
     const nextPageSnapshot = await getDocs(nextPageQuery);
     isLastPage = nextPageSnapshot.empty;
 
@@ -491,3 +497,174 @@ document.getElementById("home-sign-out").addEventListener("click", function () {
 document.getElementById("home-profile").addEventListener("click", function () {
     location.href = "profile.html";
 });
+
+document.getElementById("home-upload-post-btn").addEventListener("click", function () {
+    onAuthStateChanged(auth, async (_user) => {
+        if (_user) {
+            user = _user;
+            uploadPostModal.style.display = "block";
+        } else {
+            console.log("onAuthStateChanged - User Signed out");
+            location.href = "index.html";
+        }
+    });
+});
+
+// Get the modal
+var uploadPostModal = document.getElementById("upload-post-modal");
+
+// Get the <span> element that closes the modal
+var span = document.getElementsByClassName("close")[0];
+
+// When the user clicks on <span> (x), close the modal
+span.onclick = function () {
+    uploadPostModal.style.display = "none";
+};
+
+// When the user clicks anywhere outside of the modal, close it
+window.onclick = function (event) {
+    if (event.target == uploadPostModal) {
+        uploadPostModal.style.display = "none";
+    }
+};
+
+var uploadPostBase64 = "";
+var selectedFileName = "";
+var postFileName = "";
+document
+    .getElementById("home-upload-post-image-file-selector")
+    .addEventListener("change", function () {
+        let file = this.files[0];
+        let reader = new FileReader();
+        selectedFileName = file.name;
+
+        reader.onload = function (event) {
+            uploadPostBase64 = event.target.result;
+            document.getElementById("home-upload-post-image-preview").src =
+                uploadPostBase64;
+            document.getElementById("home-upload-post-image-preview").style.display =
+                "block";
+        };
+
+        reader.readAsDataURL(file);
+    });
+
+function canPost(oldDate, newDate) {
+    const oldTime = new Date(oldDate).getTime();
+    const newTime = new Date(newDate).getTime();
+
+    const diffInMs = Math.abs(oldTime - newTime);
+    const fifteenMinsInMs = 15 * 60 * 1000;
+
+    return diffInMs > fifteenMinsInMs;
+}
+
+const uploadForm = document.getElementById("home-upload-post-form");
+uploadForm.addEventListener("submit", async function (event) {
+    event.preventDefault();
+    debugger;
+
+    if (user.emailVerified) {
+        await getDoc(doc(firestore, "users", user.email))
+            .then((_userDocument) => {
+                debugger;
+                console.log(_userDocument.data().last_uploaded);
+                const user = _userDocument.data();
+
+                //https://stackoverflow.com/a/7709819
+                const oldDate = user.last_uploaded.toDate();
+                const newDate = new Date();
+                if (canPost(oldDate, newDate)) {
+                    // Storage
+                    const storage = getStorage(app);
+
+                    // Create a storage reference from our storage service
+                    postFileName =
+                        user.uid + "_" + new Date().getTime() + "_" + selectedFileName;
+                    const postImagesRef = ref(storage, "post_images/" + postFileName);
+
+                    var uploadPostBytes = base64ToArrayBuffer(
+                        uploadPostBase64.split(",")[1]
+                    );
+
+                    const uploadTask = uploadBytesResumable(
+                        postImagesRef,
+                        uploadPostBytes
+                    ); // uploadPostBase64, metadata
+                    uploadTask.on(
+                        "state_changed",
+                        (snapshot) => {
+                            const progress =
+                                (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            console.log("Upload is " + progress + "% done");
+                            switch (snapshot.state) {
+                                case "paused":
+                                    console.log("Upload is paused");
+                                    break;
+                                case "running":
+                                    console.log("Upload is running");
+                                    break;
+                            }
+                        },
+                        (error) => {
+                            console.log("Upload failed" + error);
+                        },
+                        () => {
+                            getDownloadURL(uploadTask.snapshot.ref).then(
+                                async (downloadURL) => {
+                                    debugger;
+                                    console.log("File available at", downloadURL);
+                                    const postTitle =
+                                        document.getElementById("upload-post-title").value;
+                                    await setDoc(doc(firestore, "posts", postFileName), {
+                                        created_by: user.email,
+                                        post_image_path: downloadURL,
+                                        post_title: postTitle,
+                                        down_count: 0,
+                                        up_count: 0,
+                                        created_on: Timestamp.fromDate(new Date()),
+                                    })
+                                        .then(async (setPost) => {
+                                            console.log("Post uploaded successfully.");
+                                            await updateDoc(doc(firestore, "users", user.email), {
+                                                last_uploaded: Timestamp.fromDate(new Date()),
+                                            })
+                                                .then((_updatedUser) => {
+                                                    location.reload();
+                                                    console.log(
+                                                        "Last Uploaded time updated successfully - " +
+                                                        _updatedUser.date().last_uploaded
+                                                    );
+                                                })
+                                                .catch((error) => {
+                                                    console.log(error);
+                                                });
+                                        })
+                                        .catch((error) => {
+                                            console.log(error);
+                                        });
+                                }
+                            );
+                        }
+                    );
+                } else {
+                    alert("Please wait for 15 mins before uploading again.");
+                }
+            })
+            .catch((error) => {
+                console.log("Check last upload time - fetch user - " + error);
+            });
+    } else {
+        alert("Pleaes verify your email before uploading.");
+    }
+});
+
+// https://stackoverflow.com/a/21797381/2776913
+function base64ToArrayBuffer(base64) {
+    var binaryString = atob(base64);
+    var bytes = new Uint8Array(binaryString.length);
+    for (var i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+}

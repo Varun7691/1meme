@@ -88,17 +88,13 @@ onAuthStateChanged(auth, async (_user) => {
       userPostsQueryQuerySnapshot.forEach((_post) => {
         const post = _post.data();
 
-        listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${
-          post.post_title
-        }</label></div><img src="${
-          post.post_image_path
-        }"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn">${
-          post.up_count
-        }<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn"> ${
-          post.down_count
-        }<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(
-          post.created_on.toDate()
-        )} </label></div></li>`;
+        listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title
+          }</label></div><img src="${post.post_image_path
+          }"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn">${post.up_count
+          }<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn"> ${post.down_count
+          }<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(
+            post.created_on.toDate()
+          )} </label></div></li>`;
 
         document.getElementById("my-posts-list").innerHTML = listHtml;
       });
@@ -116,17 +112,13 @@ onAuthStateChanged(auth, async (_user) => {
       upVotedPostsQuerySnapshot.forEach((_post) => {
         const post = _post.data();
 
-        updVotedPostsListHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${
-          post.post_title
-        }</label></div><img src="${
-          post.post_image_path
-        }"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn selected">${
-          post.up_count
-        }<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn unselected"> ${
-          post.down_count
-        }<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(
-          post.created_on.toDate()
-        )} </label></div></li>`;
+        updVotedPostsListHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title
+          }</label></div><img src="${post.post_image_path
+          }"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn selected">${post.up_count
+          }<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn unselected"> ${post.down_count
+          }<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(
+            post.created_on.toDate()
+          )} </label></div></li>`;
 
         document.getElementById("my-upvoted-posts-list").innerHTML =
           updVotedPostsListHtml;
@@ -315,6 +307,16 @@ document
     reader.readAsDataURL(file);
   });
 
+function canPost(oldDate, newDate) {
+  const oldTime = new Date(oldDate).getTime();
+  const newTime = new Date(newDate).getTime();
+
+  const diffInMs = Math.abs(oldTime - newTime);
+  const fifteenMinsInMs = 15 * 60 * 1000;
+
+  return diffInMs > fifteenMinsInMs;
+}
+
 const uploadForm = document.getElementById("upload-post-form");
 uploadForm.addEventListener("submit", async function (event) {
   event.preventDefault();
@@ -325,18 +327,11 @@ uploadForm.addEventListener("submit", async function (event) {
         console.log(_userDocument.data().last_uploaded);
         const user = _userDocument.data();
 
-        debugger;
         //https://stackoverflow.com/a/7709819
         const oldDate = user.last_uploaded.toDate();
         const newDate = new Date();
-        const diffTime = Math.abs(oldDate - newDate);
-        var diffDays = Math.floor(diffTime / 86400000); // days
-        var diffHrs = Math.floor((diffTime % 86400000) / 3600000); // hours
-        var diffMins = Math.round(((diffTime % 86400000) % 3600000) / 60000); // minutes
-        console.log(
-          diffDays + " days, " + diffHrs + " hours, " + diffMins + " minutes"
-        );
-        if (diffMins > 15) {
+
+        if (canPost(oldDate, newDate)) {
           // Storage
           const storage = getStorage(app);
 
@@ -394,7 +389,7 @@ uploadForm.addEventListener("submit", async function (event) {
                         .then((_updatedUser) => {
                           console.log(
                             "Last Uploaded time updated successfully - " +
-                              _updatedUser.date().last_uploaded
+                            _updatedUser.date().last_uploaded
                           );
                         })
                         .catch((error) => {
