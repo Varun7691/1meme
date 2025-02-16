@@ -1,0 +1,25 @@
+{
+  "name": "9one_mvp",
+  "version": "1.0.0",
+  "description": "This is actually 7gag",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Varun7691/9one.git"
+  },
+  "keywords": [
+    "7gag"
+  ],
+  "author": "Varun Barve",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Varun7691/9one/issues"
+  },
+  "homepage": "https://github.com/Varun7691/9one#readme",
+  "dependencies": {
+    "eslint-plugin-security": "^3.0.1"
+  }
+}
