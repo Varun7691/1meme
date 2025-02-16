@@ -40,13 +40,13 @@ const form = document.getElementById("signup-form");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 
-var EMAIL_REGEX =
+const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const validateEmail = (email) => {
   return String(email).toLowerCase().match(EMAIL_REGEX);
 };
 
-form.addEventListener("submit", async function (event) {
+form.addEventListener("submit", async (event) => {
   event.preventDefault();
   if (validateEmail(email.value)) {
     const status = await validatePassword(auth, password.value);
@@ -75,8 +75,8 @@ form.addEventListener("submit", async function (event) {
           sendEmailVerification(user)
             .then(() => {
               // Email verification sent!
-              let msg =
-                "An email verification link has been sent to " + user.email;
+              const msg =
+                `An email verification link has been sent to ${user.email}`;
             })
             .catch((error) => {
               console.log(error);
@@ -97,7 +97,7 @@ form.addEventListener("submit", async function (event) {
 
 document
   .getElementById("cancel-sign-up")
-  .addEventListener("click", function () {
+  .addEventListener("click", () => {
     window.history.go(-1);
     return false;
   });

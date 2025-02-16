@@ -46,7 +46,7 @@ const app = initializeApp(firebaseConfig);
 
 // Auth - user
 const auth = getAuth(app);
-var user = "";
+let user = "";
 
 // Firestore
 const firestore = getFirestore(app, "nineone");
@@ -75,43 +75,43 @@ async function getData(direction) {
 
     document.getElementById("all-posts-list").innerHTML = "";
 
-    snapshot.forEach((_post) => {
+    for (_post of snapshot) {
         renderUI(_post);
-    });
+    }
 }
 
 async function renderUI(_post) {
-    var post = _post.data();
+    let post = _post.data();
 
-    let li = document.createElement("li");
+    const li = document.createElement("li");
 
-    var postUser = "";
+    let postUser = "";
     const userQuery = query(
         collection(firestore, "users"),
         where("email", "==", post.created_by)
     );
     const userQueryQuerySnapshot = await getDocs(userQuery);
-    userQueryQuerySnapshot.forEach((_user) => {
+    for (_user of userQueryQuerySnapshot) {
         postUser = _user.data();
 
-        let postUsernameContainer = document.createElement("div");
-        let postUsernameLabel = document.createElement("label");
-        let postTitleContainer = document.createElement("div");
-        let postTitleLabel = document.createElement("label");
-        let postImage = document.createElement("img");
+        const postUsernameContainer = document.createElement("div");
+        const postUsernameLabel = document.createElement("label");
+        const postTitleContainer = document.createElement("div");
+        const postTitleLabel = document.createElement("label");
+        const postImage = document.createElement("img");
 
-        let voteDateContainer = document.createElement("div");
-        let postDateLabel = document.createElement("label");
+        const voteDateContainer = document.createElement("div");
+        const postDateLabel = document.createElement("label");
 
-        let voteContainer = document.createElement("div");
-        let upButton = document.createElement("label");
-        let downButton = document.createElement("label");
+        const voteContainer = document.createElement("div");
+        const upButton = document.createElement("label");
+        const downButton = document.createElement("label");
 
         // <i class="fa fa-play fa-rotate-270 fa-xl"></i>
-        let upFontAwesome = document.createElement("i");
+        const upFontAwesome = document.createElement("i");
         upFontAwesome.setAttribute("class", "fa fa-play fa-rotate-270 fa-xl");
 
-        let downFontAwesome = document.createElement("i");
+        const downFontAwesome = document.createElement("i");
         downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
 
         postUsernameLabel.textContent = postUser.userName;
@@ -123,10 +123,10 @@ async function renderUI(_post) {
         postImage.setAttribute("width", "30%");
         postImage.setAttribute("height", "30%");
 
-        upButton.textContent = post.up_count + "  ";
-        upButton.id = "up_" + _post.id;
-        downButton.textContent = post.down_count + "  ";
-        downButton.id = "down_" + _post.id;
+        upButton.textContent = `${post.up_count}  `;
+        upButton.id = `up_${_post.id}`;
+        downButton.textContent = `${post.down_count}  `;
+        downButton.id = `down_${_post.id}`;
 
         postDateLabel.textContent = getPostAgeString(post.created_on.toDate());
 
@@ -162,13 +162,13 @@ async function renderUI(_post) {
         downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
         setVotesByUser(_post, upButton, downButton);
 
-        upButton.addEventListener("click", async function () {
+        upButton.addEventListener("click", async () => {
             onAuthStateChanged(auth, async (_user) => {
                 if (_user) {
                     await getDoc(doc(firestore, "users", _user.email))
                         .then(async (_usersDocument) => {
                             user = _usersDocument.data();
-                            var isPostUpVoted = false;
+                            let isPostUpVoted = false;
                             for (let i = 0; i < user.up_posts.length; i++) {
                                 if (_post.id === user.up_posts[i]) {
                                     isPostUpVoted = true;
@@ -189,7 +189,7 @@ async function renderUI(_post) {
                                                         post = _updatedPost.data();
 
                                                         upButton.textContent =
-                                                            _updatedPost.data().up_count + " ";
+                                                            `${_updatedPost.data().up_count} `;
                                                         upButton.setAttribute("class", "unselected");
 
                                                         upButton.append(upFontAwesome);
@@ -197,22 +197,21 @@ async function renderUI(_post) {
                                                     })
                                                     .catch((error) => {
                                                         console.log(
-                                                            "Could not get post after upvote update - " +
-                                                            error
+                                                            `Could not get post after upvote update - ${error}`
                                                         );
                                                     });
                                             })
                                             .catch((error) => {
                                                 console.log(
-                                                    "Could not update up_post for user - " + error
+                                                    `Could not update up_post for user - ${error}`
                                                 );
                                             });
                                     })
                                     .catch((error) => {
-                                        console.log("Could not update upvote on post - " + error);
+                                        console.log(`Could not update upvote on post - ${error}`);
                                     });
                             } else {
-                                var downCount = post.down_count;
+                                let downCount = post.down_count;
                                 for (let i = 0; i < user.down_posts.length; i++) {
                                     if (_post.id === user.down_posts[i]) {
                                         downCount = downCount - 1;
@@ -233,9 +232,9 @@ async function renderUI(_post) {
                                                         post = _updatedPost.data();
 
                                                         upButton.textContent =
-                                                            _updatedPost.data().up_count + " ";
+                                                            `${_updatedPost.data().up_count} `;
                                                         downButton.textContent =
-                                                            _updatedPost.data().down_count + " ";
+                                                            `${_updatedPost.data().down_count} `;
 
                                                         upButton.setAttribute("class", "selected");
                                                         downButton.setAttribute("class", "unselected");
@@ -245,24 +244,23 @@ async function renderUI(_post) {
                                                     })
                                                     .catch((error) => {
                                                         console.log(
-                                                            "Could not get post after upvote update - " +
-                                                            error
+                                                            `Could not get post after upvote update - ${error}`
                                                         );
                                                     });
                                             })
                                             .catch((error) => {
                                                 console.log(
-                                                    "Could not update up_post for user - " + error
+                                                    `Could not update up_post for user - ${error}`
                                                 );
                                             });
                                     })
                                     .catch((error) => {
-                                        console.log("Could not update upvote on post - " + error);
+                                        console.log(`Could not update upvote on post - ${error}`);
                                     });
                             }
                         })
                         .catch((error) => {
-                            console.log("Could not fetch user - " + error);
+                            console.log(`Could not fetch user - ${error}`);
                         });
                 } else {
                     console.log("onAuthStateChanged - User Signed out");
@@ -271,13 +269,13 @@ async function renderUI(_post) {
             });
         });
 
-        downButton.addEventListener("click", async function () {
+        downButton.addEventListener("click", async () => {
             onAuthStateChanged(auth, async (_user) => {
                 if (_user) {
                     await getDoc(doc(firestore, "users", _user.email))
                         .then(async (_usersDocument) => {
                             user = _usersDocument.data();
-                            var isPostDownVoted = false;
+                            let isPostDownVoted = false;
                             for (let i = 0; i < user.down_posts.length; i++) {
                                 if (_post.id === user.down_posts[i]) {
                                     isPostDownVoted = true;
@@ -299,7 +297,7 @@ async function renderUI(_post) {
                                                         post = _updatedPost.data();
 
                                                         downButton.textContent =
-                                                            _updatedPost.data().down_count + " ";
+                                                            `${_updatedPost.data().down_count} `;
 
                                                         downButton.setAttribute("class", "unselected");
 
@@ -308,22 +306,21 @@ async function renderUI(_post) {
                                                     })
                                                     .catch((error) => {
                                                         console.log(
-                                                            "Could not get post after upvote update - " +
-                                                            error
+                                                            `Could not get post after upvote update - ${error}`
                                                         );
                                                     });
                                             })
                                             .catch((error) => {
                                                 console.log(
-                                                    "Could not update up_post for user - " + error
+                                                    `Could not update up_post for user - ${error}`
                                                 );
                                             });
                                     })
                                     .catch((error) => {
-                                        console.log("Could not update upvote on post - " + error);
+                                        console.log(`Could not update upvote on post - ${error}`);
                                     });
                             } else {
-                                var upCount = post.up_count;
+                                let upCount = post.up_count;
                                 for (let i = 0; i < user.up_posts.length; i++) {
                                     if (_post.id === user.up_posts[i]) {
                                         upCount = upCount - 1;
@@ -344,9 +341,9 @@ async function renderUI(_post) {
                                                         post = _updatedPost.data();
 
                                                         downButton.textContent =
-                                                            _updatedPost.data().down_count + " ";
+                                                            `${_updatedPost.data().down_count} `;
                                                         upButton.textContent =
-                                                            _updatedPost.data().up_count + " ";
+                                                            `${_updatedPost.data().up_count} `;
 
                                                         upButton.setAttribute("class", "unselected");
                                                         downButton.setAttribute("class", "selected");
@@ -356,24 +353,23 @@ async function renderUI(_post) {
                                                     })
                                                     .catch((error) => {
                                                         console.log(
-                                                            "Could not get post after upvote update - " +
-                                                            error
+                                                            `Could not get post after upvote update - ${error}`
                                                         );
                                                     });
                                             })
                                             .catch((error) => {
                                                 console.log(
-                                                    "Could not update up_post for user - " + error
+                                                    `Could not update up_post for user - ${error}`
                                                 );
                                             });
                                     })
                                     .catch((error) => {
-                                        console.log("Could not update upvote on post - " + error);
+                                        console.log(`Could not update upvote on post - ${error}`);
                                     });
                             }
                         })
                         .catch((error) => {
-                            console.log("Could not fetch user - " + error);
+                            console.log(`Could not fetch user - ${error}`);
                         });
                 } else {
                     console.log("onAuthStateChanged - User Signed out");
@@ -381,7 +377,7 @@ async function renderUI(_post) {
                 }
             });
         });
-    });
+    };
     document.getElementById("all-posts-list").append(li);
     // Hiding the loading label
     document.getElementById("all-post-loading").style.display = "none";
@@ -406,7 +402,7 @@ function setVotesByUser(_post, upButton, downButton) {
                     }
                 })
                 .catch((error) => {
-                    console.log("Could not update upvote on post - " + error);
+                    console.log(`Could not update upvote on post - ${error}`);
                 });
         } else {
             console.log("onAuthStateChanged - User Signed out");
@@ -446,16 +442,15 @@ document.getElementById("btn_prev").addEventListener("click", () => {
 
 getData();
 
-function getPostAgeString(postDate, referenceDate = new Date()) {
-    postDate = new Date(postDate);
-    referenceDate = new Date(referenceDate);
+function getPostAgeString(_postDate, referenceDate = new Date()) {
+    const postDate = new Date(_postDate);
 
-    let diffMs = referenceDate - postDate; // Difference in milliseconds
-    let minutes = Math.floor(diffMs / (1000 * 60));
-    let hours = Math.floor(diffMs / (1000 * 60 * 60));
-    let days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    let weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
-    let years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
+    const diffMs = referenceDate - postDate; // Difference in milliseconds
+    const minutes = Math.floor(diffMs / (1000 * 60));
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
+    const years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
 
     if (years > 0) return `${years} year${years > 1 ? "s" : ""} ago`;
     if (weeks > 0) return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
@@ -466,7 +461,7 @@ function getPostAgeString(postDate, referenceDate = new Date()) {
     return "Just now";
 }
 
-document.getElementById("home-sign-out").addEventListener("click", function () {
+document.getElementById("home-sign-out").addEventListener("click", () => {
     signOut(auth)
         .then(() => {
             location.href = "index.html";
@@ -476,11 +471,11 @@ document.getElementById("home-sign-out").addEventListener("click", function () {
         });
 });
 
-document.getElementById("home-profile").addEventListener("click", function () {
+document.getElementById("home-profile").addEventListener("click", () => {
     location.href = "profile.html";
 });
 
-document.getElementById("home-upload-post-btn").addEventListener("click", function () {
+document.getElementById("home-upload-post-btn").addEventListener("click", () => {
     onAuthStateChanged(auth, async (_user) => {
         if (_user) {
             user = _user;
@@ -493,34 +488,34 @@ document.getElementById("home-upload-post-btn").addEventListener("click", functi
 });
 
 // Get the modal
-var uploadPostModal = document.getElementById("upload-post-modal");
+const uploadPostModal = document.getElementById("upload-post-modal");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+const span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function () {
+span.onclick = () => {
     uploadPostModal.style.display = "none";
 };
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-    if (event.target == uploadPostModal) {
+window.onclick = (event) => {
+    if (event.target === uploadPostModal) {
         uploadPostModal.style.display = "none";
     }
 };
 
-var uploadPostBase64 = "";
-var selectedFileName = "";
-var postFileName = "";
+let uploadPostBase64 = "";
+let selectedFileName = "";
+let postFileName = "";
 document
     .getElementById("home-upload-post-image-file-selector")
     .addEventListener("change", function () {
-        let file = this.files[0];
-        let reader = new FileReader();
+        const file = this.files[0];
+        const reader = new FileReader();
         selectedFileName = file.name;
 
-        reader.onload = function (event) {
+        reader.onload = (event) => {
             uploadPostBase64 = event.target.result;
             document.getElementById("home-upload-post-image-preview").src =
                 uploadPostBase64;
@@ -542,7 +537,7 @@ function canPost(oldDate, newDate) {
 }
 
 const uploadForm = document.getElementById("home-upload-post-form");
-uploadForm.addEventListener("submit", async function (event) {
+uploadForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (user.emailVerified) {
         await getDoc(doc(firestore, "users", user.email))
@@ -558,10 +553,10 @@ uploadForm.addEventListener("submit", async function (event) {
 
                     // Create a storage reference from our storage service
                     postFileName =
-                        user.uid + "_" + new Date().getTime() + "_" + selectedFileName;
-                    const postImagesRef = ref(storage, "post_images/" + postFileName);
+                        `${user.uid}_${new Date().getTime()}_${selectedFileName}`;
+                    const postImagesRef = ref(storage, `post_images/${postFileName}`);
 
-                    var uploadPostBytes = base64ToArrayBuffer(
+                    const uploadPostBytes = base64ToArrayBuffer(
                         uploadPostBase64.split(",")[1]
                     );
 
@@ -574,7 +569,7 @@ uploadForm.addEventListener("submit", async function (event) {
                         (snapshot) => {
                             const progress =
                                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                            console.log("Upload is " + progress + "% done");
+                            console.log(`Upload is ${progress}% done`);
                             switch (snapshot.state) {
                                 case "paused":
                                     console.log("Upload is paused");
@@ -585,7 +580,7 @@ uploadForm.addEventListener("submit", async function (event) {
                             }
                         },
                         (error) => {
-                            console.log("Upload failed" + error);
+                            console.log(`Upload failed${error}`);
                         },
                         () => {
                             getDownloadURL(uploadTask.snapshot.ref).then(
@@ -624,7 +619,7 @@ uploadForm.addEventListener("submit", async function (event) {
                 }
             })
             .catch((error) => {
-                console.log("Check last upload time - fetch user - " + error);
+                console.log(`Check last upload time - fetch user - ${error}`);
             });
     } else {
         alert("Pleaes verify your email before uploading.");
@@ -633,9 +628,9 @@ uploadForm.addEventListener("submit", async function (event) {
 
 // https://stackoverflow.com/a/21797381/2776913
 function base64ToArrayBuffer(base64) {
-    var binaryString = atob(base64);
-    var bytes = new Uint8Array(binaryString.length);
-    for (var i = 0; i < binaryString.length; i++) {
+    const binaryString = atob(base64);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
         bytes[i] = binaryString.charCodeAt(i);
     }
     return bytes.buffer;

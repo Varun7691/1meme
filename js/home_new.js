@@ -40,7 +40,7 @@ const app = initializeApp(firebaseConfig);
 
 // Auth - user
 const auth = getAuth(app);
-var user = "";
+let user = "";
 
 // Firestore
 const firestore = getFirestore(app, "nineone");
@@ -69,43 +69,44 @@ async function getData(direction) {
 
     document.getElementById("all-posts-list").innerHTML = "";
 
-    snapshot.forEach((_post) => {
+    for (const _post of snapshot) {
         renderUI(_post);
-    });
+    }
 }
 
 async function renderUI(_post) {
-    var post = _post.data();
+    let post = _post.data();
 
-    let li = document.createElement("li");
+    const li = document.createElement("li");
 
-    var postUser = "";
+    let postUser = "";
     const userQuery = query(
         collection(firestore, "users"),
         where("email", "==", post.created_by)
     );
     const userQueryQuerySnapshot = await getDocs(userQuery);
-    userQueryQuerySnapshot.forEach((_user) => {
+    // userQueryQuerySnapshot.forEach((_user) => {
+    for (_user of userQueryQuerySnapshot) {
         postUser = _user.data();
 
-        let postUsernameContainer = document.createElement("div");
-        let postUsernameLabel = document.createElement("label");
-        let postTitleContainer = document.createElement("div");
-        let postTitleLabel = document.createElement("label");
-        let postImage = document.createElement("img");
+        const postUsernameContainer = document.createElement("div");
+        const postUsernameLabel = document.createElement("label");
+        const postTitleContainer = document.createElement("div");
+        const postTitleLabel = document.createElement("label");
+        const postImage = document.createElement("img");
 
-        let voteDateContainer = document.createElement("div");
-        let postDateLabel = document.createElement("label");
+        const voteDateContainer = document.createElement("div");
+        const postDateLabel = document.createElement("label");
 
-        let voteContainer = document.createElement("div");
-        let upButton = document.createElement("label");
-        let downButton = document.createElement("label");
+        const voteContainer = document.createElement("div");
+        const upButton = document.createElement("label");
+        const downButton = document.createElement("label");
 
         // <i class="fa fa-play fa-rotate-270 fa-xl"></i>
-        let upFontAwesome = document.createElement("i");
+        const upFontAwesome = document.createElement("i");
         upFontAwesome.setAttribute("class", "fa fa-play fa-rotate-270 fa-xl");
 
-        let downFontAwesome = document.createElement("i");
+        const downFontAwesome = document.createElement("i");
         downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
 
         postUsernameLabel.textContent = postUser.userName;
@@ -117,10 +118,10 @@ async function renderUI(_post) {
         postImage.setAttribute("width", "30%");
         postImage.setAttribute("height", "30%");
 
-        upButton.textContent = post.up_count + " ";
-        upButton.id = "up_" + _post.id;
-        downButton.textContent = post.down_count + " ";
-        downButton.id = "down_" + _post.id;
+        upButton.textContent = `${post.up_count} ` //post.up_count + " ";
+        upButton.id = `up_${_post.id}` //"up_" + _post.id;
+        downButton.textContent = `${post.down_count} ` //post.down_count + " ";
+        downButton.id = `down_${_post.id}` //"down_" + _post.id;
 
         postDateLabel.textContent = getPostAgeString(post.created_on.toDate());
 
@@ -156,13 +157,14 @@ async function renderUI(_post) {
         downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
         setVotesByUser(_post, upButton, downButton);
 
-        upButton.addEventListener("click", async function () {
+        upButton.addEventListener("click", async () => {
             onAuthStateChanged(auth, async (_user) => {
                 if (_user) {
                     await getDoc(doc(firestore, "users", _user.email))
                         .then(async (_usersDocument) => {
                             user = _usersDocument.data();
-                            var isPostUpVoted = false;
+                            let isPostUpVoted = false;
+                            let downCount = "";
                             for (let i = 0; i < user.up_posts.length; i++) {
                                 if (_post.id === user.up_posts[i]) {
                                     isPostUpVoted = true;
@@ -182,8 +184,8 @@ async function renderUI(_post) {
                                                     .then((_updatedPost) => {
                                                         post = _updatedPost.data();
 
-                                                        upButton.textContent =
-                                                            _updatedPost.data().up_count + " ";
+                                                        upButton.textContent = `${_updatedPost.data().up_count} `
+                                                            //_updatedPost.data().up_count + " ";
                                                         upButton.setAttribute("class", "unselected");
 
                                                         upButton.append(upFontAwesome);
@@ -191,22 +193,22 @@ async function renderUI(_post) {
                                                     })
                                                     .catch((error) => {
                                                         console.log(
-                                                            "Could not get post after upvote update - " +
-                                                            error
+                                                            `Could not get post after upvote update - 
+                                                            ${error}`
                                                         );
                                                     });
                                             })
                                             .catch((error) => {
                                                 console.log(
-                                                    "Could not update up_post for user - " + error
+                                                    `Could not update up_post for user - ${error}`
                                                 );
                                             });
                                     })
                                     .catch((error) => {
-                                        console.log("Could not update upvote on post - " + error);
+                                        console.log(`Could not update upvote on post - ${error}`);
                                     });
                             } else {
-                                var downCount = post.down_count;
+                                downCount = post.down_count;
                                 for (let i = 0; i < user.down_posts.length; i++) {
                                     if (_post.id === user.down_posts[i]) {
                                         downCount = downCount - 1;
@@ -227,9 +229,9 @@ async function renderUI(_post) {
                                                         post = _updatedPost.data();
 
                                                         upButton.textContent =
-                                                            _updatedPost.data().up_count + " ";
+                                                            `${_updatedPost.data().up_count} `;
                                                         downButton.textContent =
-                                                            _updatedPost.data().down_count + " ";
+                                                            `${_updatedPost.data().down_count} `;
 
                                                         upButton.setAttribute("class", "selected");
                                                         downButton.setAttribute("class", "unselected");
@@ -239,24 +241,23 @@ async function renderUI(_post) {
                                                     })
                                                     .catch((error) => {
                                                         console.log(
-                                                            "Could not get post after upvote update - " +
-                                                            error
+                                                            `Could not get post after upvote update - ${error}`
                                                         );
                                                     });
                                             })
                                             .catch((error) => {
                                                 console.log(
-                                                    "Could not update up_post for user - " + error
+                                                    `Could not update up_post for user - ${error}`
                                                 );
                                             });
                                     })
                                     .catch((error) => {
-                                        console.log("Could not update upvote on post - " + error);
+                                        console.log(`Could not update upvote on post - ${error}`);
                                     });
                             }
                         })
                         .catch((error) => {
-                            console.log("Could not fetch user - " + error);
+                            console.log(`Could not fetch user - ${error}`);
                         });
                 } else {
                     console.log("onAuthStateChanged - User Signed out");
@@ -265,13 +266,14 @@ async function renderUI(_post) {
             });
         });
 
-        downButton.addEventListener("click", async function () {
+        downButton.addEventListener("click", async () => {
             onAuthStateChanged(auth, async (_user) => {
                 if (_user) {
                     await getDoc(doc(firestore, "users", _user.email))
                         .then(async (_usersDocument) => {
                             user = _usersDocument.data();
-                            var isPostDownVoted = false;
+                            let upCount = "";
+                            let isPostDownVoted = false;
                             for (let i = 0; i < user.down_posts.length; i++) {
                                 if (_post.id === user.down_posts[i]) {
                                     isPostDownVoted = true;
@@ -292,7 +294,7 @@ async function renderUI(_post) {
                                                         post = _updatedPost.data();
 
                                                         downButton.textContent =
-                                                            _updatedPost.data().down_count + " ";
+                                                           `${_updatedPost.data().down_count} `;
 
                                                         downButton.setAttribute("class", "unselected");
 
@@ -301,22 +303,21 @@ async function renderUI(_post) {
                                                     })
                                                     .catch((error) => {
                                                         console.log(
-                                                            "Could not get post after upvote update - " +
-                                                            error
+                                                            `Could not get post after upvote update - ${error}`
                                                         );
                                                     });
                                             })
                                             .catch((error) => {
                                                 console.log(
-                                                    "Could not update up_post for user - " + error
+                                                    `Could not update up_post for user - ${error}`
                                                 );
                                             });
                                     })
                                     .catch((error) => {
-                                        console.log("Could not update upvote on post - " + error);
+                                        console.log(`Could not update upvote on post - ${error}`);
                                     });
                             } else {
-                                var upCount = post.up_count;
+                                upCount = post.up_count;
                                 for (let i = 0; i < user.up_posts.length; i++) {
                                     if (_post.id === user.up_posts[i]) {
                                         upCount = upCount - 1;
@@ -337,9 +338,9 @@ async function renderUI(_post) {
                                                         post = _updatedPost.data();
 
                                                         downButton.textContent =
-                                                            _updatedPost.data().down_count + " ";
+                                                            `${_updatedPost.data().down_count} `;
                                                         upButton.textContent =
-                                                            _updatedPost.data().up_count + " ";
+                                                            `${_updatedPost.data().up_count} `;
 
                                                         upButton.setAttribute("class", "unselected");
                                                         downButton.setAttribute("class", "selected");
@@ -349,24 +350,23 @@ async function renderUI(_post) {
                                                     })
                                                     .catch((error) => {
                                                         console.log(
-                                                            "Could not get post after upvote update - " +
-                                                            error
+                                                            `Could not get post after upvote update - ${error}`
                                                         );
                                                     });
                                             })
                                             .catch((error) => {
                                                 console.log(
-                                                    "Could not update up_post for user - " + error
+                                                    `Could not update up_post for user - ${error}`
                                                 );
                                             });
                                     })
                                     .catch((error) => {
-                                        console.log("Could not update upvote on post - " + error);
+                                        console.log(`Could not update upvote on post - ${error}`);
                                     });
                             }
                         })
                         .catch((error) => {
-                            console.log("Could not fetch user - " + error);
+                            console.log(`Could not fetch user - ${error}`);
                         });
                 } else {
                     console.log("onAuthStateChanged - User Signed out");
@@ -374,7 +374,7 @@ async function renderUI(_post) {
                 }
             });
         });
-    });
+    };
     document.getElementById("all-posts-list").append(li);
     // Hiding the loading label
     document.getElementById("all-post-loading").style.display = "none";
@@ -399,7 +399,7 @@ function setVotesByUser(_post, upButton, downButton) {
                     }
                 })
                 .catch((error) => {
-                    console.log("Could not update upvote on post - " + error);
+                    console.log(`Could not update upvote on post - ${error}`);
                 });
         } else {
             console.log("onAuthStateChanged - User Signed out");
@@ -439,16 +439,15 @@ document.getElementById("btn_prev").addEventListener("click", () => {
 
 getData();
 
-function getPostAgeString(postDate, referenceDate = new Date()) {
-    postDate = new Date(postDate);
-    referenceDate = new Date(referenceDate);
+function getPostAgeString(_postDate, referenceDate = new Date()) {
+    const postDate = new Date(_postDate);
 
-    let diffMs = referenceDate - postDate; // Difference in milliseconds
-    let minutes = Math.floor(diffMs / (1000 * 60));
-    let hours = Math.floor(diffMs / (1000 * 60 * 60));
-    let days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    let weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
-    let years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
+    const diffMs = referenceDate - postDate; // Difference in milliseconds
+    const minutes = Math.floor(diffMs / (1000 * 60));
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
+    const years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
 
     if (years > 0) return `${years} year${years > 1 ? "s" : ""} ago`;
     if (weeks > 0) return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
@@ -459,7 +458,7 @@ function getPostAgeString(postDate, referenceDate = new Date()) {
     return "Just now";
 }
 
-document.getElementById("home-sign-out").addEventListener("click", function () {
+document.getElementById("home-sign-out").addEventListener("click", () => {
     signOut(auth)
         .then(() => {
             location.href = "index.html";
@@ -469,6 +468,6 @@ document.getElementById("home-sign-out").addEventListener("click", function () {
         });
 });
 
-document.getElementById("home-profile").addEventListener("click", function () {
+document.getElementById("home-profile").addEventListener("click", () => {
     location.href = "profile.html";
 });

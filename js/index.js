@@ -32,7 +32,7 @@ const form = document.getElementById("login-form");
 const email = document.getElementById("email");
 const password = document.getElementById("password");
 
-form.addEventListener("submit", function (event) {
+form.addEventListener("submit", (event) => {
   event.preventDefault();
 
   signInWithEmailAndPassword(auth, email.value.trim(), password.value.trim())
@@ -49,32 +49,32 @@ form.addEventListener("submit", function (event) {
     });
 });
 
-document.getElementById("signup-button").onclick = function () {
+document.getElementById("signup-button").onclick = () => {
   location.href = "signup.html";
 };
 
-document.getElementById("guest-button").onclick = function () {
+document.getElementById("guest-button").onclick = () => {
   location.href = "home.html";
 };
 
-document.getElementById("forgot-password-btn").onclick = function () {
+document.getElementById("forgot-password-btn").onclick = () => {
   modal.style.display = "block";
 };
 
-var EMAIL_REGEX =
+const EMAIL_REGEX =
   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const validateEmail = (email) => {
   return String(email).toLowerCase().match(EMAIL_REGEX);
 };
 
 const forgotPasswordform = document.getElementById("forgot-password-form");
-forgotPasswordform.addEventListener("submit", function (event) {
+forgotPasswordform.addEventListener("submit", (event) => {
   event.preventDefault();
   const email = document.getElementById("forgot-password-email").value;
   if (validateEmail(email)) {
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        alert("An email has been sent to " + email);
+        alert(`An email has been sent to ${email}`);
       })
       .catch((error) => {
         const errorCode = error.code;
@@ -86,19 +86,19 @@ forgotPasswordform.addEventListener("submit", function (event) {
 });
 
 // Get the modal
-var modal = document.getElementById("myModal");
+const modal = document.getElementById("myModal");
 
 // Get the <span> element that closes the modal
-var span = document.getElementsByClassName("close")[0];
+const span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on <span> (x), close the modal
-span.onclick = function () {
+span.onclick = () => {
   modal.style.display = "none";
 };
 
 // When the user clicks anywhere outside of the modal, close it
-window.onclick = function (event) {
-  if (event.target == modal) {
+window.onclick = (event) => {
+  if (event.target === modal) {
     modal.style.display = "none";
   }
 };

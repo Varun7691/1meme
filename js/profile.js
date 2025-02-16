@@ -24,7 +24,7 @@ import {
   signOut,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
-var user = "";
+let user = "";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
@@ -54,8 +54,8 @@ onAuthStateChanged(auth, async (_user) => {
       where("uid", "==", user.uid)
     );
     const querySnapshot = await getDocs(q);
-    querySnapshot.forEach(async (doc) => {
-      const user = doc.data();
+    for(_doc of querySnapshot){
+      const user = _doc.data();
 
       // Set userName
       document.getElementById("welcome-user").innerHTML = user.userName;
@@ -74,9 +74,9 @@ onAuthStateChanged(auth, async (_user) => {
       const diffTime = Math.abs(oldDate - newDate);
       const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
       document.getElementById("active-since").innerHTML =
-        "Active for: " + diffDays + " day(s)";
+        `Active for: ${diffDays} day(s)`;
 
-      var listHtml = "";
+      let listHtml = "";
 
       // Get user posts
       const userPostsQuery = query(
@@ -85,7 +85,7 @@ onAuthStateChanged(auth, async (_user) => {
         orderBy("created_on", "desc")
       );
       const userPostsQueryQuerySnapshot = await getDocs(userPostsQuery);
-      userPostsQueryQuerySnapshot.forEach((_post) => {
+      for(_post of userPostsQueryQuerySnapshot){
         const post = _post.data();
 
         listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title
@@ -97,9 +97,9 @@ onAuthStateChanged(auth, async (_user) => {
           )} </label></div></li>`;
 
         document.getElementById("my-posts-list").innerHTML = listHtml;
-      });
+      };
 
-      var updVotedPostsListHtml = "";
+      let updVotedPostsListHtml = "";
 
       // Get user's upvoted posts
       const upVotedPostsArray = user.up_posts;
@@ -109,7 +109,7 @@ onAuthStateChanged(auth, async (_user) => {
         orderBy("created_on", "desc")
       ); // https://stackoverflow.com/a/62150539
       const upVotedPostsQuerySnapshot = await getDocs(upVotedPostsQuery);
-      upVotedPostsQuerySnapshot.forEach((_post) => {
+      for(_post of upVotedPostsQuerySnapshot){
         const post = _post.data();
 
         updVotedPostsListHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title
@@ -122,24 +122,23 @@ onAuthStateChanged(auth, async (_user) => {
 
         document.getElementById("my-upvoted-posts-list").innerHTML =
           updVotedPostsListHtml;
-      });
-    });
+      };
+    };
   } else {
     console.log("onAuthStateChanged - User Signed out");
     location.href = "index.html";
   }
 });
 
-function getPostAgeString(postDate, referenceDate = new Date()) {
-  postDate = new Date(postDate);
-  referenceDate = new Date(referenceDate);
+function getPostAgeString(_postDate, referenceDate = new Date()) {
+  const postDate = new Date(_postDate);
 
-  let diffMs = referenceDate - postDate; // Difference in milliseconds
-  let minutes = Math.floor(diffMs / (1000 * 60));
-  let hours = Math.floor(diffMs / (1000 * 60 * 60));
-  let days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-  let weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
-  let years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
+  const diffMs = referenceDate - postDate; // Difference in milliseconds
+  const minutes = Math.floor(diffMs / (1000 * 60));
+  const hours = Math.floor(diffMs / (1000 * 60 * 60));
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const weeks = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 7));
+  const years = Math.floor(diffMs / (1000 * 60 * 60 * 24 * 365));
 
   if (years > 0) return `${years} year${years > 1 ? "s" : ""} ago`;
   if (weeks > 0) return `${weeks} week${weeks > 1 ? "s" : ""} ago`;
@@ -159,35 +158,35 @@ const uploadNewPostsButton = document.getElementById("upload-new-posts-button");
 // Passing parameter to a function - https://stackoverflow.com/a/12024498
 myPostsButton.addEventListener(
   "click",
-  function () {
+  () => {
     showHideTabs(1);
   },
   false
 );
 myCommentsButton.addEventListener(
   "click",
-  function () {
+  () => {
     showHideTabs(2);
   },
   false
 );
 myUpvotesButton.addEventListener(
   "click",
-  function () {
+  () => {
     showHideTabs(3);
   },
   false
 );
 uploadPostsButton.addEventListener(
   "click",
-  function () {
+  () => {
     showHideTabs(4);
   },
   false
 );
 uploadNewPostsButton.addEventListener(
   "click",
-  function () {
+  () => {
     showHideTabs(5);
   },
   false
@@ -286,17 +285,17 @@ function showHideTabs(containerNumber) {
 }
 showHideTabs(1);
 
-var uploadPostBase64 = "";
-var selectedFileName = "";
-var postFileName = "";
+let uploadPostBase64 = "";
+let selectedFileName = "";
+let postFileName = "";
 document
   .getElementById("upload-post-image-file-selector")
   .addEventListener("change", function () {
-    let file = this.files[0];
-    let reader = new FileReader();
+    const file = this.files[0];
+    const reader = new FileReader();
     selectedFileName = file.name;
 
-    reader.onload = function (event) {
+    reader.onload = (event) => {
       uploadPostBase64 = event.target.result;
       document.getElementById("upload-post-image-preview").src =
         uploadPostBase64;
@@ -318,7 +317,7 @@ function canPost(oldDate, newDate) {
 }
 
 const uploadForm = document.getElementById("upload-post-form");
-uploadForm.addEventListener("submit", async function (event) {
+uploadForm.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   if (user.emailVerified) {
@@ -336,10 +335,10 @@ uploadForm.addEventListener("submit", async function (event) {
 
           // Create a storage reference from our storage service
           postFileName =
-            user.uid + "_" + new Date().getTime() + "_" + selectedFileName;
-          const postImagesRef = ref(storage, "post_images/" + postFileName);
+            `${user.uid}_${new Date().getTime()}_${selectedFileName}`;
+          const postImagesRef = ref(storage, `post_images/${postFileName}`);
 
-          var uploadPostBytes = base64ToArrayBuffer(
+          const uploadPostBytes = base64ToArrayBuffer(
             uploadPostBase64.split(",")[1]
           );
 
@@ -352,7 +351,7 @@ uploadForm.addEventListener("submit", async function (event) {
             (snapshot) => {
               const progress =
                 (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              console.log("Upload is " + progress + "% done");
+              console.log(`Upload is ${progress}% done`);
               switch (snapshot.state) {
                 case "paused":
                   console.log("Upload is paused");
@@ -363,7 +362,7 @@ uploadForm.addEventListener("submit", async function (event) {
               }
             },
             (error) => {
-              console.log("Upload failed" + error);
+              console.log(`Upload failed${error}`);
             },
             () => {
               getDownloadURL(uploadTask.snapshot.ref).then(
@@ -402,7 +401,7 @@ uploadForm.addEventListener("submit", async function (event) {
         }
       })
       .catch((error) => {
-        console.log("Check last upload time - fetch user - " + error);
+        console.log(`Check last upload time - fetch user - ${error}`);
       });
   } else {
     alert("Pleaes verify your email before uploading.");
@@ -411,9 +410,9 @@ uploadForm.addEventListener("submit", async function (event) {
 
 // https://stackoverflow.com/a/21797381/2776913
 function base64ToArrayBuffer(base64) {
-  var binaryString = atob(base64);
-  var bytes = new Uint8Array(binaryString.length);
-  for (var i = 0; i < binaryString.length; i++) {
+  const binaryString = atob(base64);
+  const bytes = new Uint8Array(binaryString.length);
+  for (let i = 0; i < binaryString.length; i++) {
     bytes[i] = binaryString.charCodeAt(i);
   }
   return bytes.buffer;
@@ -421,7 +420,7 @@ function base64ToArrayBuffer(base64) {
 
 document
   .getElementById("profile-sign-out")
-  .addEventListener("click", function () {
+  .addEventListener("click", () => {
     signOut(auth)
       .then(() => {
         location.href = "index.html";
@@ -433,22 +432,22 @@ document
 
 document
   .getElementById("profile-home-button")
-  .addEventListener("click", function () {
+  .addEventListener("click", () => {
     location.href = "home.html";
   });
 
-const dropArea = document.querySelector(".drop_box"),
-  button = dropArea.querySelector("button"),
-  input = dropArea.querySelector("input"),
-  dragText = dropArea.querySelector("header");
+const dropArea = document.querySelector(".drop_box");
+const button = dropArea.querySelector("button");
+const input = dropArea.querySelector("input");
+const dragText = dropArea.querySelector("header");
 
 button.onclick = () => {
   input.click();
 };
 
-input.addEventListener("change", function (e) {
-  var fileName = e.target.files[0].name;
-  let filedata = `
+input.addEventListener("change", (e) => {
+  const fileName = e.target.files[0].name;
+  const filedata = `
       <form action="" method="post">
       <div class="form">
       <h4>${fileName}</h4>
