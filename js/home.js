@@ -107,7 +107,7 @@ async function renderUI(_post) {
 		where("email", "==", post.created_by),
 	);
 	const userQueryQuerySnapshot = await getDocs(userQuery);
-	for (const _user of userQueryQuerySnapshot.docs) {
+	for (let _user of userQueryQuerySnapshot.docs) {
 		postUser = _user.data();
 
 		const postUsernameContainer = document.createElement("div");
