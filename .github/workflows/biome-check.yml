@@ -16,3 +16,23 @@ jobs:
           version: latest
       - name: Run Biome
         run: biome ci .
+
+  eslint-security:
+    name: ESLint Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run ESLint Security Checks
+        run: |
+          npm install eslint eslint-plugin-security --save-dev
+          npx eslint . --ext .js
