@@ -221,7 +221,7 @@ function showHideTabs(containerNumber) {
 			myPostsButton.className = "tab-selected";
 			myCommentsButton.className = "tab-unselected";
 			myUpvotesButton.className = "tab-unselected";
-			uploadPostsButton.className = "tab-unselected";
+			uploadPostsButton.className = "tab-upload-unselected";
 			uploadNewPostsButton.className = "tab-unselected";
 			break;
 		case 2:
@@ -234,7 +234,7 @@ function showHideTabs(containerNumber) {
 			myPostsButton.className = "tab-unselected";
 			myCommentsButton.className = "tab-selected";
 			myUpvotesButton.className = "tab-unselected";
-			uploadPostsButton.className = "tab-unselected";
+			uploadPostsButton.className = "tab-upload-unselected";
 			uploadNewPostsButton.className = "tab-unselected";
 			break;
 		case 3:
@@ -248,7 +248,7 @@ function showHideTabs(containerNumber) {
 			myPostsButton.className = "tab-unselected";
 			myCommentsButton.className = "tab-unselected";
 			myUpvotesButton.className = "tab-selected";
-			uploadPostsButton.className = "tab-unselected";
+			uploadPostsButton.className = "tab-upload-unselected";
 			uploadNewPostsButton.className = "tab-unselected";
 			break;
 		case 4:
@@ -261,7 +261,7 @@ function showHideTabs(containerNumber) {
 			myPostsButton.className = "tab-unselected";
 			myCommentsButton.className = "tab-unselected";
 			myUpvotesButton.className = "tab-unselected";
-			uploadPostsButton.className = "tab-selected";
+			uploadPostsButton.className = "tab-upload-selected";
 			uploadNewPostsButton.className = "tab-unselected";
 			break;
 		case 5:
@@ -274,7 +274,7 @@ function showHideTabs(containerNumber) {
 			myPostsButton.className = "tab-unselected";
 			myCommentsButton.className = "tab-unselected";
 			myUpvotesButton.className = "tab-unselected";
-			uploadPostsButton.className = "tab-unselected";
+			uploadPostsButton.className = "tab-upload-unselected";
 			uploadNewPostsButton.className = "tab-selected";
 			break;
 		default:
