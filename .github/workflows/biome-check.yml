@@ -5,6 +5,7 @@ on:
 
 jobs:
   quality:
+    name: Code Quality Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
