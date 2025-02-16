@@ -91,7 +91,7 @@ async function getData(direction) {
 
 	document.getElementById("all-posts-list").innerHTML = "";
 
-	for (let _post of snapshot.docs) {
+	for (const _post of snapshot.docs) {
 		renderUI(_post);
 	}
 }
@@ -107,7 +107,7 @@ async function renderUI(_post) {
 		where("email", "==", post.created_by),
 	);
 	const userQueryQuerySnapshot = await getDocs(userQuery);
-	for (let _user of userQueryQuerySnapshot.docs) {
+	for (const _user of userQueryQuerySnapshot.docs) {
 		postUser = _user.data();
 
 		const postUsernameContainer = document.createElement("div");

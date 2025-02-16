@@ -54,7 +54,7 @@ onAuthStateChanged(auth, async (_user) => {
 			where("uid", "==", user.uid),
 		);
 		const querySnapshot = await getDocs(q);
-		for (let _doc of querySnapshot.docs) {
+		for (const _doc of querySnapshot.docs) {
 			const user = _doc.data();
 
 			// Set userName
@@ -85,7 +85,7 @@ onAuthStateChanged(auth, async (_user) => {
 				orderBy("created_on", "desc"),
 			);
 			const userPostsQueryQuerySnapshot = await getDocs(userPostsQuery);
-			for (let _post of userPostsQueryQuerySnapshot.docs) {
+			for (const _post of userPostsQueryQuerySnapshot.docs) {
 				const post = _post.data();
 
 				listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${
@@ -113,7 +113,7 @@ onAuthStateChanged(auth, async (_user) => {
 				orderBy("created_on", "desc"),
 			); // https://stackoverflow.com/a/62150539
 			const upVotedPostsQuerySnapshot = await getDocs(upVotedPostsQuery);
-			for (let _post of upVotedPostsQuerySnapshot.docs) {
+			for (const _post of upVotedPostsQuerySnapshot.docs) {
 				const post = _post.data();
 
 				updVotedPostsListHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${
