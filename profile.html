@@ -359,6 +359,23 @@
         padding: 0 10px;
         font-size: 14px;
     }
+
+    .tab-upload-selected {
+        background-color: var(--accent-color);
+        color: var(--secondary-color);
+        border: 2px solid var(--accent-color);
+    }
+
+    #upload-posts-button:hover{
+        background-color: var(--accent-color);
+        color: var(--secondary-color);
+    }
+
+    .tab-upload-unselected {
+        background-color: var(--secondary-color);
+        color: var(--accent-color);
+        border: 2px solid var(--accent-color);
+    }
 </style>
 
 <body>
@@ -377,7 +394,7 @@
         <button id='my-posts-button'>My Posts</button>
         <button id='my-comments-button' style="display: none;">Saved</button>
         <button id='my-upvotes-button'>My Ups</button>
-        <button id='upload-posts-button'>Upload Post</button>
+        <button id='upload-posts-button'><i class="fa-solid fa-plus fa-lg"></i> Upload Post</button>
         <button id='upload-new-posts-button' style="display: none;">Upload Post New</button>
     </div>
     <div id="my-posts-container" style="display: none;">
