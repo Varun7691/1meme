@@ -3,22 +3,22 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
 import {
-  getAuth,
-  signInWithEmailAndPassword,
-  signInAnonymously,
-  sendPasswordResetEmail,
+	getAuth,
+	sendPasswordResetEmail,
+	signInAnonymously,
+	signInWithEmailAndPassword,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "AIzaSyBfBXlbUUWygLra3FdkbaMoX5PEaHAvxmg",
-  authDomain: "one-5769e.firebaseapp.com",
-  projectId: "one-5769e",
-  storageBucket: "one-5769e.firebasestorage.app",
-  messagingSenderId: "851668219021",
-  appId: "1:851668219021:web:da67de784fd13188655ec4",
-  measurementId: "G-ZEVQ84F4B0",
+	apiKey: "AIzaSyBfBXlbUUWygLra3FdkbaMoX5PEaHAvxmg",
+	authDomain: "one-5769e.firebaseapp.com",
+	projectId: "one-5769e",
+	storageBucket: "one-5769e.firebasestorage.app",
+	messagingSenderId: "851668219021",
+	appId: "1:851668219021:web:da67de784fd13188655ec4",
+	measurementId: "G-ZEVQ84F4B0",
 };
 
 // Initialize Firebase
@@ -33,56 +33,56 @@ const email = document.getElementById("email");
 const password = document.getElementById("password");
 
 form.addEventListener("submit", (event) => {
-  event.preventDefault();
+	event.preventDefault();
 
-  signInWithEmailAndPassword(auth, email.value.trim(), password.value.trim())
-    .then((userCredential) => {
-      // Signed in
-      const user = userCredential.user;
-      localStorage.setItem("authenticatedUser", JSON.stringify(user));
-      location.href = "home.html";
-    })
-    .catch((error) => {
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      alert(errorMessage);
-    });
+	signInWithEmailAndPassword(auth, email.value.trim(), password.value.trim())
+		.then((userCredential) => {
+			// Signed in
+			const user = userCredential.user;
+			localStorage.setItem("authenticatedUser", JSON.stringify(user));
+			location.href = "home.html";
+		})
+		.catch((error) => {
+			const errorCode = error.code;
+			const errorMessage = error.message;
+			alert(errorMessage);
+		});
 });
 
 document.getElementById("signup-button").onclick = () => {
-  location.href = "signup.html";
+	location.href = "signup.html";
 };
 
 document.getElementById("guest-button").onclick = () => {
-  location.href = "home.html";
+	location.href = "home.html";
 };
 
 document.getElementById("forgot-password-btn").onclick = () => {
-  modal.style.display = "block";
+	modal.style.display = "block";
 };
 
 const EMAIL_REGEX =
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+	/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const validateEmail = (email) => {
-  return String(email).toLowerCase().match(EMAIL_REGEX);
+	return String(email).toLowerCase().match(EMAIL_REGEX);
 };
 
 const forgotPasswordform = document.getElementById("forgot-password-form");
 forgotPasswordform.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const email = document.getElementById("forgot-password-email").value;
-  if (validateEmail(email)) {
-    sendPasswordResetEmail(auth, email)
-      .then(() => {
-        alert(`An email has been sent to ${email}`);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
-  } else {
-    alert("Please enter a valid email.");
-  }
+	event.preventDefault();
+	const email = document.getElementById("forgot-password-email").value;
+	if (validateEmail(email)) {
+		sendPasswordResetEmail(auth, email)
+			.then(() => {
+				alert(`An email has been sent to ${email}`);
+			})
+			.catch((error) => {
+				const errorCode = error.code;
+				const errorMessage = error.message;
+			});
+	} else {
+		alert("Please enter a valid email.");
+	}
 });
 
 // Get the modal
@@ -93,12 +93,12 @@ const span = document.getElementsByClassName("close")[0];
 
 // When the user clicks on <span> (x), close the modal
 span.onclick = () => {
-  modal.style.display = "none";
+	modal.style.display = "none";
 };
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = (event) => {
-  if (event.target === modal) {
-    modal.style.display = "none";
-  }
+	if (event.target === modal) {
+		modal.style.display = "none";
+	}
 };
