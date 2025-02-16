@@ -11,6 +11,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
 
 <style>
+    :root {
+        --accent-color: #3D5AFE;
+        --primary-color: #080710;
+        --secondary-color: #fff;
+        --grey: #797979;
+    }
+
     *,
     *:before,
     *:after {
@@ -24,7 +31,7 @@
         height: 150px;
         width: 500px;
         text-align: center;
-        border-color: grey;
+        border-color: var(--grey);
         border-style: solid;
         border-width: 0px;
         padding: 10px 35px;
@@ -47,8 +54,8 @@
     }
 
     button {
-        background-color: #ffffff;
-        border: 2px solid #080710;
+        background-color: var(--secondary-color);
+        border: 2px solid var(--primary-color);
         font-size: 18px;
         font-weight: 400;
         cursor: pointer;
@@ -57,8 +64,8 @@
     }
 
     button:hover {
-        background-color: #080710;
-        color: #ffffff;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
     }
 
     h3 {
@@ -70,13 +77,13 @@
     }
 
     .tab-selected {
-        background-color: #080710;
-        color: #ffffff;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
     }
 
     .tab-unselected {
-        background-color: #fff;
-        color: #080710;
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
     }
 
     #welcome-user {
@@ -90,7 +97,7 @@
     }
 
     #active-since {
-        color: #797979;
+        color: var(--grey);
         font-size: 14px;
         font-weight: 300;
     }
@@ -109,23 +116,20 @@
         cursor: pointer;
     }
 
-    form {
+    #upload-post-form {
         height: 550px;
         width: 500px;
         margin-right: auto;
         margin-left: auto;
-        border-color: #797979;
-        border-style: solid;
-        border-width: 1px;
         padding: 20px 35px;
     }
 
-    form * {
+    #upload-post-form * {
         font-family: 'Poppins', sans-serif;
         letter-spacing: 0.5px;
     }
 
-    form>label {
+    #upload-post-form>label {
         display: block;
         margin-top: 20px;
         font-size: 16px;
@@ -133,14 +137,14 @@
     }
 
     ::placeholder {
-        color: #797979;
+        color: var(--grey);
     }
 
-    form>input {
+    #upload-post-form>input {
         display: block;
         height: 50px;
         width: 100%;
-        color: #080710;
+        color: var(--primary-color);
         border-style: solid;
         border-width: 1px;
         border-color: #a8a8a8;
@@ -170,8 +174,8 @@
     }
 
     .upload-btn {
-        background-color: #fff;
-        color: white;
+        background-color: var(--secondary-color);
+        color: var(--secondary-color);
         padding: 8px 15px;
         border-radius: 6px;
         cursor: pointer;
@@ -186,16 +190,16 @@
         align-items: center;
         display: flex;
         justify-content: center;
-        background-color: #fff;
+        background-color: var(--secondary-color);
     }
 
     .card {
-        border-color: #797979;
+        border-color: var(--grey);
         border-style: solid;
         border-width: 1px;
         width: 600px;
         height: 260px;
-        background-color: #ffffff;
+        background-color: var(--secondary-color);
         padding: 10px 30px 40px;
         margin-left: auto;
         margin-right: auto;
@@ -228,24 +232,24 @@
         margin-top: 10px;
         margin-bottom: 20px;
         font-size: 12px;
-        color: #a3a3a3;
+        color: var(--grey);
         font-family: 'Poppins', sans-serif;
         font-weight: 100;
     }
 
     .btn {
         text-decoration: none;
-        background-color: #ffffff;
-        color: #080710;
+        background-color: var(--secondary-color);
+        color: var(--primary-color);
         padding: 10px 20px;
         border: none;
-        outline: 1px solid #080710;
+        outline: 1px solid var(--primary-color);
     }
 
     .btn:hover {
         text-decoration: none;
-        background-color: #080710;
-        color: #ffffff;
+        background-color: var(--primary-color);
+        color: var(--secondary-color);
         padding: 10px 20px;
         border: none;
         outline: none;
@@ -255,7 +259,7 @@
     .form input {
         margin: 10px 0;
         width: 100%;
-        background-color: #e2e2e2;
+        background-color: var(--secondary-color);
         border: none;
         outline: none;
         padding: 12px 20px;
@@ -270,7 +274,7 @@
     .post-item {
         border-style: solid;
         border-width: 1px;
-        border-color: #080710;
+        border-color: var(--primary-color);
         width: 600px;
         margin-left: auto;
         margin-right: auto;
@@ -343,14 +347,14 @@
     }
 
     .selected {
-        color: #448AFF;
+        color: var(--accent-color);
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
     }
 
     .unselected {
-        color: #797979;
+        color: var(--grey);
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;

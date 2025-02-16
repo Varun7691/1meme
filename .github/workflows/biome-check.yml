@@ -1,0 +1,56 @@
+name: Code quality
+
+on:
+  pull_request:
+
+jobs:
+  quality:
+    name: Code Quality Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Biome
+        uses: biomejs/setup-biome@v2
+        with:
+          version: latest
+      - name: Run Biome
+        run: biome ci .
+
+  eslint-security:
+    name: ESLint Security Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run ESLint Security Checks
+        run: |
+          npm install eslint eslint-plugin-security --save-dev
+          npx eslint .
+
+  npm-audit:
+      name: Dependency Security Check (npm audit)
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Code
+          uses: actions/checkout@v4
+
+        - name: Setup Node.js
+          uses: actions/setup-node@v4
+          with:
+            node-version: 18
+
+        - name: Install Dependencies
+          run: npm install
+
+        - name: Run npm Audit
+          run: npm audit --audit-level=high
