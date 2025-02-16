@@ -30,9 +30,9 @@ jobs:
           node-version: 18
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Run ESLint Security Checks
         run: |
           npm install eslint eslint-plugin-security --save-dev
-          npx eslint . --ext .js
+          npx eslint .
