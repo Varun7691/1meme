@@ -1,61 +1,61 @@
 * {
-    font-family: Verdana, sans-serif;
+	font-family: Verdana, sans-serif;
 }
 
 h1 {
-    text-align: center;
+	text-align: center;
 }
 
 h3 {
-    text-align: center;
+	text-align: center;
 }
 
 form {
-    text-align: center;
+	text-align: center;
 }
 
 h1 {
-    text-align: center;
+	text-align: center;
 }
 
 h2 {
-    text-align: center;
+	text-align: center;
 }
 
 ul {
-    list-style-type: none;
-    padding-left: 10%;
-    padding-right: 10%;
-    text-align: center;
+	list-style-type: none;
+	padding-left: 10%;
+	padding-right: 10%;
+	text-align: center;
 }
 
 .grid-container {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    align-items: center;
+	display: grid;
+	grid-template-columns: auto auto auto;
+	align-items: center;
 }
 
-.grid-container>div {
-    text-align: center;
+.grid-container > div {
+	text-align: center;
 }
 
 li {
-    border-style: groove;
+	border-style: groove;
 }
 
-li>label.post-username {
-    color: grey;
+li > label.post-username {
+	color: grey;
 }
 
-li>label.post-title {
-    color: black;
-    font-size: 20px;
+li > label.post-title {
+	color: black;
+	font-size: 20px;
 }
 
-.selected{
-    color: blue;
+.selected {
+	color: blue;
 }
 
-.unselected{
-    color: grey;
+.unselected {
+	color: grey;
 }
