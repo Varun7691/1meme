@@ -31,6 +31,23 @@ import {
 	uploadBytesResumable,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
 
+window.onload = () => {
+	const isGuestVisit = sessionStorage.getItem("isGuestVisit");
+	const profileLabel = document.getElementById("home-profile");
+	const signOutLabel = document.getElementById("home-sign-out");
+	const signInLabel = document.getElementById("home-sign-in");
+
+	if (isGuestVisit === "true") {
+		profileLabel.style.display = "none";
+		signOutLabel.style.display = "none";
+		signInLabel.style.display = "inline"; //https://stackoverflow.com/a/10857429
+	} else {
+		profileLabel.style.display = "inline";
+		signOutLabel.style.display = "inline";
+		signInLabel.style.display = "none";
+	}
+};
+
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -92,11 +109,11 @@ async function getData(direction) {
 	document.getElementById("all-posts-list").innerHTML = "";
 
 	for (const _post of snapshot.docs) {
-		renderUI(_post);
+		renderPostsUI(_post);
 	}
 }
 
-async function renderUI(_post) {
+async function renderPostsUI(_post) {
 	let post = _post.data();
 
 	const li = document.createElement("li");
@@ -487,6 +504,10 @@ document.getElementById("home-sign-out").addEventListener("click", () => {
 		.catch((error) => {
 			console.log(error);
 		});
+});
+
+document.getElementById("home-sign-in").addEventListener("click", () => {
+	location.href = "index.html";
 });
 
 document.getElementById("home-profile").addEventListener("click", () => {
