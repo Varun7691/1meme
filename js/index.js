@@ -39,6 +39,7 @@ form.addEventListener("submit", (event) => {
 		.then((userCredential) => {
 			// Signed in
 			const user = userCredential.user;
+			sessionStorage.setItem('isGuestVisit', false);
 			localStorage.setItem("authenticatedUser", JSON.stringify(user));
 			location.href = "home.html";
 		})
@@ -54,6 +55,7 @@ document.getElementById("signup-button").onclick = () => {
 };
 
 document.getElementById("guest-button").onclick = () => {
+	sessionStorage.setItem('isGuestVisit', true);
 	location.href = "home.html";
 };
 
