@@ -6,6 +6,8 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
 import {
 	Timestamp,
+	arrayRemove,
+	arrayUnion,
 	collection,
 	doc,
 	getDoc,
@@ -86,23 +88,22 @@ onAuthStateChanged(auth, async (_user) => {
 			);
 			const userPostsQueryQuerySnapshot = await getDocs(userPostsQuery);
 			for (const _post of userPostsQueryQuerySnapshot.docs) {
-				const post = _post.data();
+				// const post = _post.data();
 
-				listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${
-					post.post_title
-				}</label></div><img src="${
-					post.post_image_path
-				}"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn">${
-					post.up_count
-				}<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn"> ${
-					post.down_count
-				}<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(
-					post.created_on.toDate(),
-				)} </label></div></li>`;
+				// listHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title
+				// 	}</label></div><img src="${post.post_image_path
+				// 	}"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn">${post.up_count
+				// 	}<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn"> ${post.down_count
+				// 	}<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(
+				// 		post.created_on.toDate(),
+				// 	)} </label></div></li>`;
 
-				document.getElementById("my-posts-list").innerHTML = listHtml;
+				// document.getElementById("my-posts-list").innerHTML = listHtml;
+
+				renderPostsUI(_post, document.getElementById("my-posts-list"))
 			}
 
+			// Get My UpVoted posts
 			let updVotedPostsListHtml = "";
 
 			// Get user's upvoted posts
@@ -114,22 +115,20 @@ onAuthStateChanged(auth, async (_user) => {
 			); // https://stackoverflow.com/a/62150539
 			const upVotedPostsQuerySnapshot = await getDocs(upVotedPostsQuery);
 			for (const _post of upVotedPostsQuerySnapshot.docs) {
-				const post = _post.data();
+				// const post = _post.data();
 
-				updVotedPostsListHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${
-					post.post_title
-				}</label></div><img src="${
-					post.post_image_path
-				}"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn selected">${
-					post.up_count
-				}<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn unselected"> ${
-					post.down_count
-				}<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(
-					post.created_on.toDate(),
-				)} </label></div></li>`;
+				// updVotedPostsListHtml += `<li class = "post-item"><div class="post-title-container"><label class = "post-title">${post.post_title
+				// 	}</label></div><img src="${post.post_image_path
+				// 	}"id='user-display-picture'/><br/><div class="vote-date-container"><div class="vote-container"><label class="post-up-btn selected">${post.up_count
+				// 	}<i class="fa fa-play fa-rotate-270 fa-xl"></i></label> <label class="post-down-btn unselected"> ${post.down_count
+				// 	}<i class="fa fa-play fa-rotate-90 fa-xl"></i></label></div> <label class="post-age">${getPostAgeString(
+				// 		post.created_on.toDate(),
+				// 	)} </label></div></li>`;
 
-				document.getElementById("my-upvoted-posts-list").innerHTML =
-					updVotedPostsListHtml;
+				// document.getElementById("my-upvoted-posts-list").innerHTML =
+				// 	updVotedPostsListHtml;
+
+				renderPostsUI(_post, document.getElementById("my-upvoted-posts-list"))
 			}
 		}
 	} else {
@@ -137,6 +136,327 @@ onAuthStateChanged(auth, async (_user) => {
 		location.href = "index.html";
 	}
 });
+
+async function renderPostsUI(_post, myPostsListElement) {
+	let post = _post.data();
+
+	const li = document.createElement("li");
+
+	let postUser = "";
+	const userQuery = query(
+		collection(firestore, "users"),
+		where("email", "==", post.created_by),
+	);
+	const userQueryQuerySnapshot = await getDocs(userQuery);
+	for (const _user of userQueryQuerySnapshot.docs) {
+		postUser = _user.data();
+
+		const postUsernameContainer = document.createElement("div");
+		const postUsernameLabel = document.createElement("label");
+		const postTitleContainer = document.createElement("div");
+		const postTitleLabel = document.createElement("label");
+		const postImage = document.createElement("img");
+
+		const voteDateContainer = document.createElement("div");
+		const postDateLabel = document.createElement("label");
+
+		const voteContainer = document.createElement("div");
+		const upButton = document.createElement("label");
+		const downButton = document.createElement("label");
+
+		// <i class="fa fa-play fa-rotate-270 fa-xl"></i>
+		const upFontAwesome = document.createElement("i");
+		upFontAwesome.setAttribute("class", "fa fa-play fa-rotate-270 fa-xl");
+
+		const downFontAwesome = document.createElement("i");
+		downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
+
+		postUsernameLabel.textContent = postUser.userName;
+		postUsernameLabel.className = "post-username";
+		postTitleLabel.textContent = post.post_title;
+		postTitleLabel.className = "post-title";
+
+		postImage.src = post.post_image_path;
+		postImage.setAttribute("width", "30%");
+		postImage.setAttribute("height", "30%");
+
+		upButton.textContent = `${post.up_count}  `;
+		upButton.id = `up_${_post.id}`;
+		downButton.textContent = `${post.down_count}  `;
+		downButton.id = `down_${_post.id}`;
+
+		postDateLabel.textContent = getPostAgeString(post.created_on.toDate());
+
+		postTitleContainer.append(postTitleLabel);
+		postTitleContainer.setAttribute("class", "post-title-container");
+		postTitleLabel.setAttribute("class", "post-title");
+
+		postUsernameContainer.append(postUsernameLabel);
+		postUsernameContainer.setAttribute("class", "post-user-container");
+		postUsernameLabel.setAttribute("class", "post-user");
+
+		voteDateContainer.setAttribute("class", "vote-date-container");
+		postDateLabel.setAttribute("class", "post-age");
+
+		voteContainer.setAttribute("class", "vote-container");
+		upButton.setAttribute("class", "post-up-btn");
+		downButton.setAttribute("class", "post-down-btn");
+
+		upButton.append(upFontAwesome);
+		downButton.append(downFontAwesome);
+		voteContainer.append(upButton);
+		voteContainer.append(downButton);
+
+		voteDateContainer.append(voteContainer);
+		voteDateContainer.append(postDateLabel);
+
+		li.append(postTitleContainer);
+		// li.append(postUsernameContainer);
+		li.append(postImage);
+		li.append(voteDateContainer);
+
+		li.setAttribute("class", "post-item");
+		downFontAwesome.setAttribute("class", "fa fa-play fa-rotate-90 fa-xl");
+		setVotesByUser(_post, upButton, downButton);
+
+		upButton.addEventListener("click", async () => {
+			onAuthStateChanged(auth, async (_user) => {
+				if (_user) {
+					await getDoc(doc(firestore, "users", _user.email))
+						.then(async (_usersDocument) => {
+							user = _usersDocument.data();
+							let isPostUpVoted = false;
+							for (let i = 0; i < user.up_posts.length; i++) {
+								if (_post.id === user.up_posts[i]) {
+									isPostUpVoted = true;
+								}
+							}
+
+							if (isPostUpVoted === true) {
+								await updateDoc(doc(firestore, "posts", _post.id), {
+									up_count: post.up_count - 1,
+								})
+									.then(async () => {
+										await updateDoc(doc(firestore, "users", _user.email), {
+											up_posts: arrayRemove(_post.id),
+										})
+											.then(async () => {
+												await getDoc(doc(firestore, "posts", _post.id))
+													.then((_updatedPost) => {
+														post = _updatedPost.data();
+
+														upButton.textContent = `${_updatedPost.data().up_count} `;
+														upButton.setAttribute("class", "unselected");
+
+														upButton.append(upFontAwesome);
+														downButton.append(downFontAwesome);
+													})
+													.catch((error) => {
+														console.log(
+															`Could not get post after upvote update - ${error}`,
+														);
+													});
+											})
+											.catch((error) => {
+												console.log(
+													`Could not update up_post for user - ${error}`,
+												);
+											});
+									})
+									.catch((error) => {
+										console.log(`Could not update upvote on post - ${error}`);
+									});
+							} else {
+								let downCount = post.down_count;
+								for (let i = 0; i < user.down_posts.length; i++) {
+									if (_post.id === user.down_posts[i]) {
+										downCount = downCount - 1;
+									}
+								}
+								await updateDoc(doc(firestore, "posts", _post.id), {
+									up_count: post.up_count + 1,
+									down_count: downCount,
+								})
+									.then(async () => {
+										await updateDoc(doc(firestore, "users", _user.email), {
+											up_posts: arrayUnion(_post.id),
+											down_posts: arrayRemove(_post.id),
+										})
+											.then(async () => {
+												await getDoc(doc(firestore, "posts", _post.id))
+													.then((_updatedPost) => {
+														post = _updatedPost.data();
+
+														upButton.textContent = `${_updatedPost.data().up_count} `;
+														downButton.textContent = `${_updatedPost.data().down_count} `;
+
+														upButton.setAttribute("class", "selected");
+														downButton.setAttribute("class", "unselected");
+
+														upButton.append(upFontAwesome);
+														downButton.append(downFontAwesome);
+													})
+													.catch((error) => {
+														console.log(
+															`Could not get post after upvote update - ${error}`,
+														);
+													});
+											})
+											.catch((error) => {
+												console.log(
+													`Could not update up_post for user - ${error}`,
+												);
+											});
+									})
+									.catch((error) => {
+										console.log(`Could not update upvote on post - ${error}`);
+									});
+							}
+						})
+						.catch((error) => {
+							console.log(`Could not fetch user - ${error}`);
+						});
+				} else {
+					console.log("onAuthStateChanged - User Signed out");
+					location.href = "index.html";
+				}
+			});
+		});
+
+		downButton.addEventListener("click", async () => {
+			onAuthStateChanged(auth, async (_user) => {
+				if (_user) {
+					await getDoc(doc(firestore, "users", _user.email))
+						.then(async (_usersDocument) => {
+							user = _usersDocument.data();
+							let isPostDownVoted = false;
+							for (let i = 0; i < user.down_posts.length; i++) {
+								if (_post.id === user.down_posts[i]) {
+									isPostDownVoted = true;
+								}
+							}
+
+							if (isPostDownVoted === true) {
+								await updateDoc(doc(firestore, "posts", _post.id), {
+									down_count: post.down_count - 1,
+								})
+									.then(async () => {
+										await updateDoc(doc(firestore, "users", _user.email), {
+											down_posts: arrayRemove(_post.id),
+										})
+											.then(async () => {
+												await getDoc(doc(firestore, "posts", _post.id))
+													.then((_updatedPost) => {
+														post = _updatedPost.data();
+
+														downButton.textContent = `${_updatedPost.data().down_count} `;
+
+														downButton.setAttribute("class", "unselected");
+
+														upButton.append(upFontAwesome);
+														downButton.append(downFontAwesome);
+													})
+													.catch((error) => {
+														console.log(
+															`Could not get post after upvote update - ${error}`,
+														);
+													});
+											})
+											.catch((error) => {
+												console.log(
+													`Could not update up_post for user - ${error}`,
+												);
+											});
+									})
+									.catch((error) => {
+										console.log(`Could not update upvote on post - ${error}`);
+									});
+							} else {
+								let upCount = post.up_count;
+								for (let i = 0; i < user.up_posts.length; i++) {
+									if (_post.id === user.up_posts[i]) {
+										upCount = upCount - 1;
+									}
+								}
+								await updateDoc(doc(firestore, "posts", _post.id), {
+									down_count: post.down_count + 1,
+									up_count: upCount,
+								})
+									.then(async () => {
+										await updateDoc(doc(firestore, "users", _user.email), {
+											down_posts: arrayUnion(_post.id),
+											up_posts: arrayRemove(_post.id),
+										})
+											.then(async () => {
+												await getDoc(doc(firestore, "posts", _post.id))
+													.then((_updatedPost) => {
+														post = _updatedPost.data();
+
+														downButton.textContent = `${_updatedPost.data().down_count} `;
+														upButton.textContent = `${_updatedPost.data().up_count} `;
+
+														upButton.setAttribute("class", "unselected");
+														downButton.setAttribute("class", "selected");
+
+														upButton.append(upFontAwesome);
+														downButton.append(downFontAwesome);
+													})
+													.catch((error) => {
+														console.log(
+															`Could not get post after upvote update - ${error}`,
+														);
+													});
+											})
+											.catch((error) => {
+												console.log(
+													`Could not update up_post for user - ${error}`,
+												);
+											});
+									})
+									.catch((error) => {
+										console.log(`Could not update upvote on post - ${error}`);
+									});
+							}
+						})
+						.catch((error) => {
+							console.log(`Could not fetch user - ${error}`);
+						});
+				} else {
+					console.log("onAuthStateChanged - User Signed out");
+					location.href = "index.html";
+				}
+			});
+		});
+	}
+	myPostsListElement.append(li);
+}
+
+function setVotesByUser(_post, upButton, downButton) {
+	onAuthStateChanged(auth, async (_user) => {
+		if (_user) {
+			await getDoc(doc(firestore, "users", _user.email))
+				.then((_usersDocument) => {
+					const user = _usersDocument.data();
+					for (let i = 0; i < user.up_posts.length; i++) {
+						if (_post.id === user.up_posts[i]) {
+							upButton.setAttribute("class", "selected");
+						}
+					}
+
+					for (let i = 0; i < user.down_posts.length; i++) {
+						if (_post.id === user.down_posts[i]) {
+							downButton.setAttribute("class", "selected");
+						}
+					}
+				})
+				.catch((error) => {
+					console.log(`Could not update upvote on post - ${error}`);
+				});
+		} else {
+			console.log("onAuthStateChanged - User Signed out");
+		}
+	});
+}
 
 function getPostAgeString(_postDate, referenceDate = new Date()) {
 	const postDate = new Date(_postDate);

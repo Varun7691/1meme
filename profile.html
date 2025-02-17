@@ -354,10 +354,16 @@
     }
 
     .unselected {
-        color: var(--grey);
+        color: var(--primary-color);
         font-weight: 300;
         padding: 0 10px;
         font-size: 14px;
+    }
+
+    .selected:hover,
+    .unselected:hover {
+        text-decoration: underline;
+        cursor: pointer;
     }
 
     .tab-upload-selected {
@@ -366,7 +372,7 @@
         border: 2px solid var(--accent-color);
     }
 
-    #upload-posts-button:hover{
+    #upload-posts-button:hover {
         background-color: var(--accent-color);
         color: var(--secondary-color);
     }
@@ -400,7 +406,6 @@
     <div id="my-posts-container" style="display: none;">
         <br />
         <ul id="my-posts-list">
-            <li>No results</li>
         </ul>
     </div>
 
@@ -412,7 +417,6 @@
     <div id="my-upvotes-container" style="display: none;">
         <br />
         <ul id="my-upvoted-posts-list">
-            <li>No results</li>
         </ul>
     </div>
 

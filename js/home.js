@@ -92,11 +92,11 @@ async function getData(direction) {
 	document.getElementById("all-posts-list").innerHTML = "";
 
 	for (const _post of snapshot.docs) {
-		renderUI(_post);
+		renderPostsUI(_post);
 	}
 }
 
-async function renderUI(_post) {
+async function renderPostsUI(_post) {
 	let post = _post.data();
 
 	const li = document.createElement("li");
