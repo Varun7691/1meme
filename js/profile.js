@@ -78,7 +78,7 @@ onAuthStateChanged(auth, async (_user) => {
 			document.getElementById("active-since").innerHTML =
 				`Active for: ${diffDays} day(s)`;
 
-			let listHtml = "";
+			// let listHtml = "";
 
 			// Get user posts
 			const userPostsQuery = query(
@@ -100,11 +100,11 @@ onAuthStateChanged(auth, async (_user) => {
 
 				// document.getElementById("my-posts-list").innerHTML = listHtml;
 
-				renderPostsUI(_post, document.getElementById("my-posts-list"))
+				renderPostsUI(_post, document.getElementById("my-posts-list"));
 			}
 
 			// Get My UpVoted posts
-			let updVotedPostsListHtml = "";
+			// let updVotedPostsListHtml = "";
 
 			// Get user's upvoted posts
 			const upVotedPostsArray = user.up_posts;
@@ -128,7 +128,7 @@ onAuthStateChanged(auth, async (_user) => {
 				// document.getElementById("my-upvoted-posts-list").innerHTML =
 				// 	updVotedPostsListHtml;
 
-				renderPostsUI(_post, document.getElementById("my-upvoted-posts-list"))
+				renderPostsUI(_post, document.getElementById("my-upvoted-posts-list"));
 			}
 		}
 	} else {

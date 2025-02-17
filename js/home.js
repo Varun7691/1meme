@@ -32,8 +32,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
 
 window.onload = () => {
-	let isGuestVisit = sessionStorage.getItem('isGuestVisit');
-	console.log("isGuestVisit - " + isGuestVisit);
+	const isGuestVisit = sessionStorage.getItem("isGuestVisit");
 	const profileLabel = document.getElementById("home-profile");
 	const signOutLabel = document.getElementById("home-sign-out");
 	const signInLabel = document.getElementById("home-sign-in");
@@ -47,7 +46,7 @@ window.onload = () => {
 		signOutLabel.style.display = "inline";
 		signInLabel.style.display = "none";
 	}
-}
+};
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
