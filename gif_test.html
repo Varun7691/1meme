@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>7gag - GIF Test</title>
+    <script src="js/gifa11y.umd.js"></script>
+</head>
+
+<body>
+    <ul>
+        <li>
+            <img loading="lazy"
+                src="https://firebasestorage.googleapis.com/v0/b/one-5769e.firebasestorage.app/o/post_images%2Fc3Y67UnaRNSJnbFWxi3JZyyIiaD2_1738905732823_one_last_time.gif?alt=media&token=9ea0dfb5-f202-4017-b807-2579d133bddf"
+                alt="BadBoys">
+        </li>
+        <li>
+            <img loading="lazy"
+                src="https://firebasestorage.googleapis.com/v0/b/one-5769e.firebasestorage.app/o/post_images%2Fc3Y67UnaRNSJnbFWxi3JZyyIiaD2_1738856769904_we-live-headwiggle.gif?alt=media&token=b6aabaf3-55ed-4010-b22d-186814629a0b"
+                alt="WeLive">
+        </li>
+    </ul>
+
+    <script>
+        window.addEventListener('gifa11yState', (e) => {
+            console.log(e.detail)
+        })
+
+        window.gifa11y = new Gifa11y({
+            buttonBackground: '#ffffff10',
+            buttonBackgroundHover: '#ffffff10',
+            buttonIconColor: 'yellow',
+            // buttonFocusColor: '#00e7ffad',
+            // buttonIconSize: '1.5rem',
+            buttonBorderRadius: '20%',
+            // buttonIconFontSize: '1rem',
+            // buttonPlayIconID: 'playsvg',
+            // buttonPauseIconID: 'pausesvg',
+            // buttonPlayIconHTML: '',
+            // buttonPauseIconHTML: '',
+            // buttonPauseShared: true,
+            container: 'ul',
+            // exclusions: '',
+            // gifa11yOff: '',
+            // inheritClasses: true,
+            // initiallyPaused: false,
+            // langPause: 'Pause GIF:',
+            // langPlay: 'Play GIF:',
+            // langPauseAllButton: 'Pause all GIFs',
+            // langPlayAllButton: 'Play all GIFs',
+            // langMissingAlt: 'Missing image description.',
+            // langAltWarning: '&#9888; Error! Please add alternative text to GIF.',
+            // missingAltWarning: true,
+            // showButtons: true,
+            // showGifText: false,
+            target: 'img[src*=".gif"]',
+            // sharedPauseButton: true,
+        });
+    </script>
+    <template id="playsvg" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-play-circle-fill" viewBox="0 0 16 16">
+            <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.79 5.093A.5.5 0 0 0 6 5.5v5a.5.5 0 0 0 .79.407l3.5-2.5a.5.5 0 0 0 0-.814l-3.5-2.5z" />
+        </svg>
+    </template>
+    <template id="pausesvg" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-pause-circle-fill" viewBox="0 0 16 16">
+            <path
+                d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM6.25 5C5.56 5 5 5.56 5 6.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C7.5 5.56 6.94 5 6.25 5zm3.5 0c-.69 0-1.25.56-1.25 1.25v3.5a1.25 1.25 0 1 0 2.5 0v-3.5C11 5.56 10.44 5 9.75 5z" />
+        </svg>
+    </template>
+</body>
+
+</html>

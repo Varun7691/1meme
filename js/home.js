@@ -20,7 +20,6 @@ import {
 	query,
 	setDoc,
 	startAfter,
-	startAt,
 	updateDoc,
 	where,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
@@ -30,6 +29,7 @@ import {
 	ref,
 	uploadBytesResumable,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
+// import Gifa11y from './gifa11y.umd.js'
 
 window.onload = () => {
 	const isGuestVisit = sessionStorage.getItem("isGuestVisit");
@@ -155,6 +155,8 @@ async function renderPostsUI(_post) {
 		postImage.src = post.post_image_path;
 		postImage.setAttribute("width", "30%");
 		postImage.setAttribute("height", "30%");
+		postImage.setAttribute("loading", "lazy");
+		postImage.setAttribute("alt", _post.id);
 
 		upButton.textContent = `${post.up_count}  `;
 		upButton.id = `up_${_post.id}`;

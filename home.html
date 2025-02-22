@@ -5,365 +5,369 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>7gag</title>
+
     <script src="https://kit.fontawesome.com/0af1729e03.js" crossorigin="anonymous"></script>
+
+    <script src="js/gifa11y.umd.js"></script>
+    <script type="module" src="js/home.js"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
+
+    <style>
+        :root {
+            --accent-color: #3D5AFE;
+            --primary-color: #080710;
+            --secondary-color: #fff;
+            --grey: #797979;
+        }
+
+        *,
+        *:before,
+        *:after {
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding-bottom: 20px;
+        }
+
+        ul {
+            text-align: center;
+            list-style-type: none;
+        }
+
+        .post-item {
+            border-style: solid;
+            border-width: 1px;
+            border-color: var(--primary-color);
+            width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+        }
+
+        .post-title-container {
+            text-align: left;
+        }
+
+        .post-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .post-item>img {
+            width: 550px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .vote-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .post-user-container {
+            text-align: left;
+        }
+
+        .post-user {
+            font-size: 14px;
+            font-weight: 100;
+            color: var(--grey);
+            margin-bottom: 10px;
+        }
+
+        .selected {
+            color: var(--accent-color);
+            font-weight: 300;
+            padding: 0 10px;
+            font-size: 14px;
+        }
+
+        .post-up-btn {
+            font-weight: 300;
+            padding: 0 10px;
+            font-size: 14px;
+            color: var(--primary-color);
+        }
+
+        .post-down-btn {
+            font-weight: 300;
+            padding: 0 10px;
+            font-size: 14px;
+            color: var(--primary-color);
+        }
+
+        .unselected {
+            color: var(--primary-color);
+            font-weight: 300;
+            padding: 0 10px;
+            font-size: 14px;
+        }
+
+        #home-profile:hover,
+        #home-sign-out:hover,
+        #home-sign-in:hover,
+        .post-up-btn:hover,
+        .post-down-btn:hover,
+        .selected:hover,
+        .unselected:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        .header-container {
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        button {
+            width: 100%;
+            background-color: var(--secondary-color);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 0;
+            font-size: 18px;
+            font-weight: 300;
+            cursor: pointer;
+            margin: 10px 20px;
+        }
+
+        button:hover {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        #home-profile {
+            font-size: 18px;
+            color: var(--primary-color);
+            padding: 0 10px;
+        }
+
+        #home-sign-out {
+            font-size: 18px;
+            color: var(--primary-color);
+            padding: 0 10px;
+        }
+
+        #home-sign-in {
+            font-size: 18px;
+            color: var(--primary-color);
+            padding: 0 10px;
+        }
+
+        .vote-date-container {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .post-age {
+            font-weight: 300;
+            padding: 0 10px;
+            font-size: 14px;
+        }
+
+        .pagination-container {
+            position: relative;
+            width: 500px;
+            height: 50px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #btn_prev:hover,
+        #btn_next:hover {
+            text-decoration: underline;
+            cursor: pointer;
+        }
+
+        #btn_prev,
+        #btn_next {
+            width: auto;
+            position: absolute;
+            top: 30%;
+            transform: translateY(-50%);
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: var(--secondary-color);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        #btn_prev:hover,
+        #btn_next:hover {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+
+        #btn_prev {
+            left: 0;
+            display: none;
+        }
+
+        #btn_next {
+            right: 0;
+            display: none;
+        }
+
+        #all-post-loading {
+            width: 100px;
+            align-self: center;
+            margin: auto;
+            display: block;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        #home-upload-post-btn {
+            position: fixed;
+            width: 200px;
+            height: 56px;
+            bottom: 40px;
+            right: 300px;
+            text-align: center;
+            background-color: var(--secondary-color);
+            color: var(--accent-color);
+            border: 2px solid var(--accent-color);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+        }
+
+        #home-upload-post-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--secondary-color);
+            border: 2px solid var(--secondary-color);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            padding-top: 100px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .modal-content {
+            background-color: var(--secondary-color);
+            margin: auto;
+            padding: 20px;
+            border: 1px solid var(--grey);
+            width: 550px;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .close {
+            color: #aaaaaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            font-variation-settings:
+                'FILL' 0,
+                'wght' 400,
+                'GRAD' 0,
+                'opsz' 24
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #000;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        ::placeholder {
+            color: var(--grey);
+        }
+
+        #home-upload-post-form {
+            height: auto;
+            width: 500px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+
+        #home-upload-post-form * {
+            font-family: 'Poppins', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        #home-upload-post-form-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        #home-upload-post-form>label {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+        }
+
+        #home-upload-post-form>input {
+            display: block;
+            height: 50px;
+            width: 100%;
+            color: var(--primary-color);
+            border-style: solid;
+            border-width: 1px;
+            margin-top: 10px;
+            border-color: var(--grey);
+            padding: 0 10px;
+            font-size: 14px;
+            font-weight: 300;
+        }
+
+        #home-upload-post-form>button {
+            width: 100%;
+            background-color: var(--secondary-color);
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 0;
+            font-size: 18px;
+            font-weight: 300;
+            cursor: pointer;
+            margin: 10px 0px;
+            font-weight: 400;
+        }
+
+        #home-upload-post-form>button:hover {
+            background-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        #home-upload-post-image-preview {
+            width: 350px;
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
 </head>
-<script type="module" src="js/home.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=close" />
-
-<style>
-    :root {
-        --accent-color: #3D5AFE;
-        --primary-color: #080710;
-        --secondary-color: #fff;
-        --grey: #797979;
-    }
-
-    *,
-    *:before,
-    *:after {
-        padding: 0;
-        margin: 0;
-        box-sizing: border-box;
-    }
-
-    body {
-        padding-bottom: 20px;
-    }
-
-    ul {
-        text-align: center;
-        list-style-type: none;
-    }
-
-    .post-item {
-        border-style: solid;
-        border-width: 1px;
-        border-color: var(--primary-color);
-        width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        font-family: 'Poppins', sans-serif;
-        padding: 20px;
-    }
-
-    .post-title-container {
-        text-align: left;
-    }
-
-    .post-title {
-        font-size: 20px;
-        font-weight: 600;
-    }
-
-    .post-item>img {
-        width: 550px;
-        margin-top: 10px;
-        margin-bottom: 10px;
-    }
-
-    .vote-container {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .post-user-container {
-        text-align: left;
-    }
-
-    .post-user {
-        font-size: 14px;
-        font-weight: 100;
-        color: var(--grey);
-        margin-bottom: 10px;
-    }
-
-    .selected {
-        color: var(--accent-color);
-        font-weight: 300;
-        padding: 0 10px;
-        font-size: 14px;
-    }
-
-    .post-up-btn {
-        font-weight: 300;
-        padding: 0 10px;
-        font-size: 14px;
-        color: var(--primary-color);
-    }
-
-    .post-down-btn {
-        font-weight: 300;
-        padding: 0 10px;
-        font-size: 14px;
-        color: var(--primary-color);
-    }
-
-    .unselected {
-        color: var(--primary-color);
-        font-weight: 300;
-        padding: 0 10px;
-        font-size: 14px;
-    }
-
-    #home-profile:hover,
-    #home-sign-out:hover,
-    #home-sign-in:hover,
-    .post-up-btn:hover,
-    .post-down-btn:hover,
-    .selected:hover,
-    .unselected:hover {
-        text-decoration: underline;
-        cursor: pointer;
-    }
-
-    .header-container {
-        width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        display: flex;
-        justify-content: space-between;
-        align-items: baseline;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    button {
-        width: 100%;
-        background-color: var(--secondary-color);
-        border: 2px solid var(--primary-color);
-        color: var(--primary-color);
-        padding: 10px 0;
-        font-size: 18px;
-        font-weight: 300;
-        cursor: pointer;
-        margin: 10px 20px;
-    }
-
-    button:hover {
-        background-color: var(--primary-color);
-        color: var(--secondary-color);
-    }
-
-    #home-profile {
-        font-size: 18px;
-        color: var(--primary-color);
-        padding: 0 10px;
-    }
-
-    #home-sign-out {
-        font-size: 18px;
-        color: var(--primary-color);
-        padding: 0 10px;
-    }
-
-    #home-sign-in {
-        font-size: 18px;
-        color: var(--primary-color);
-        padding: 0 10px;
-    }
-
-    .vote-date-container {
-        display: flex;
-        justify-content: space-between;
-    }
-
-    .post-age {
-        font-weight: 300;
-        padding: 0 10px;
-        font-size: 14px;
-    }
-
-    .pagination-container {
-        position: relative;
-        width: 500px;
-        height: 50px;
-        margin-left: auto;
-        margin-right: auto;
-        padding: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    #btn_prev:hover,
-    #btn_next:hover {
-        text-decoration: underline;
-        cursor: pointer;
-    }
-
-    #btn_prev,
-    #btn_next {
-        width: auto;
-        position: absolute;
-        top: 30%;
-        transform: translateY(-50%);
-        padding: 10px 20px;
-        font-size: 16px;
-        cursor: pointer;
-        border: none;
-        background-color: var(--secondary-color);
-        border: 2px solid var(--primary-color);
-        color: var(--primary-color);
-    }
-
-    #btn_prev:hover,
-    #btn_next:hover {
-        background-color: var(--primary-color);
-        color: var(--secondary-color);
-    }
-
-
-    #btn_prev {
-        left: 0;
-        display: none;
-    }
-
-    #btn_next {
-        right: 0;
-        display: none;
-    }
-
-    #all-post-loading {
-        width: 100px;
-        align-self: center;
-        margin: auto;
-        display: block;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    #home-upload-post-btn {
-        position: fixed;
-        width: 200px;
-        height: 56px;
-        bottom: 40px;
-        right: 300px;
-        text-align: center;
-        background-color: var(--secondary-color);
-        color: var(--accent-color);
-        border: 2px solid var(--accent-color);
-        font-family: 'Poppins', sans-serif;
-        font-weight: 600;
-    }
-
-    #home-upload-post-btn:hover {
-        background-color: var(--accent-color);
-        color: var(--secondary-color);
-        border: 2px solid var(--secondary-color);
-    }
-
-    .modal {
-        display: none;
-        position: fixed;
-        z-index: 1;
-        padding-top: 100px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        background-color: rgba(0, 0, 0, 0.4);
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .modal-content {
-        background-color: var(--secondary-color);
-        margin: auto;
-        padding: 20px;
-        border: 1px solid var(--grey);
-        width: 550px;
-        font-family: 'Poppins', sans-serif;
-    }
-
-    .close {
-        color: #aaaaaa;
-        float: right;
-        font-size: 28px;
-        font-weight: bold;
-        font-variation-settings:
-            'FILL' 0,
-            'wght' 400,
-            'GRAD' 0,
-            'opsz' 24
-    }
-
-    .close:hover,
-    .close:focus {
-        color: #000;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
-    ::placeholder {
-        color: var(--grey);
-    }
-
-    #home-upload-post-form {
-        height: auto;
-        width: 500px;
-        margin-right: auto;
-        margin-left: auto;
-    }
-
-    #home-upload-post-form * {
-        font-family: 'Poppins', sans-serif;
-        letter-spacing: 0.5px;
-    }
-
-    #home-upload-post-form-title {
-        font-size: 20px;
-        font-weight: 600;
-        margin-bottom: 20px;
-    }
-
-    #home-upload-post-form>label {
-        display: block;
-        font-size: 16px;
-        font-weight: 500;
-    }
-
-    #home-upload-post-form>input {
-        display: block;
-        height: 50px;
-        width: 100%;
-        color: var(--primary-color);
-        border-style: solid;
-        border-width: 1px;
-        margin-top: 10px;
-        border-color: var(--grey);
-        padding: 0 10px;
-        font-size: 14px;
-        font-weight: 300;
-    }
-
-    #home-upload-post-form>button {
-        width: 100%;
-        background-color: var(--secondary-color);
-        border: 2px solid var(--primary-color);
-        color: var(--primary-color);
-        padding: 10px 0;
-        font-size: 18px;
-        font-weight: 300;
-        cursor: pointer;
-        margin: 10px 0px;
-        font-weight: 400;
-    }
-
-    #home-upload-post-form>button:hover {
-        background-color: var(--primary-color);
-        color: var(--secondary-color);
-    }
-
-    #home-upload-post-image-preview {
-        width: 350px;
-        display: block;
-        margin: 20px auto;
-    }
-</style>
 
 <body>
     <div class="header-container">
