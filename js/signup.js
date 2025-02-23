@@ -18,13 +18,12 @@ import {
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-	apiKey: "AIzaSyBfBXlbUUWygLra3FdkbaMoX5PEaHAvxmg",
-	authDomain: "one-5769e.firebaseapp.com",
-	projectId: "one-5769e",
-	storageBucket: "one-5769e.firebasestorage.app",
-	messagingSenderId: "851668219021",
-	appId: "1:851668219021:web:da67de784fd13188655ec4",
-	measurementId: "G-ZEVQ84F4B0",
+	apiKey: "AIzaSyDVMOTIrCVn8dMRMMeMHow5TtFLI0BF4lY",
+	authDomain: "onememe-a9e5c.firebaseapp.com",
+	projectId: "onememe-a9e5c",
+	storageBucket: "onememe-a9e5c.firebasestorage.app",
+	messagingSenderId: "458039086973",
+	appId: "1:458039086973:web:e0e24911e6d6f467dac614",
 };
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -33,7 +32,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
 // Firestore
-const firestore = getFirestore(app, "nineone");
+const firestore = getFirestore(app, "onememe");
 
 // Signup
 const form = document.getElementById("signup-form");
@@ -57,13 +56,16 @@ form.addEventListener("submit", async (event) => {
 					const user = userCredential.user;
 
 					await setDoc(doc(firestore, "users", user.email), {
+						createdOn: Timestamp.fromDate(new Date()),
 						display_picture:
-							"https://firebasestorage.googleapis.com/v0/b/one-5769e.firebasestorage.app/o/user_placeholder.jpg?alt=media&token=356c6aa7-a290-4167-a0c6-e9f72bef8909",
+							"https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMWV6c3Z1anh0ODhobDc2dzhndGNudGlsdjZzZ2I2OGRsZ3BidmNoeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/VIKa3CjZDCoymNcBY5/giphy.gif",
+						down_posts: [],
 						email: user.email,
+						last_uploaded: Timestamp.fromDate(new Date()),
 						profile_description: "",
 						uid: user.uid,
+						up_posts: [],
 						userName: user.email.split("@")[0],
-						createdOn: Timestamp.fromDate(new Date()),
 					})
 						.then((setPost) => {
 							location.href = "home.html";

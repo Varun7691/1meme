@@ -12,13 +12,12 @@ import {
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-	apiKey: "AIzaSyBfBXlbUUWygLra3FdkbaMoX5PEaHAvxmg",
-	authDomain: "one-5769e.firebaseapp.com",
-	projectId: "one-5769e",
-	storageBucket: "one-5769e.firebasestorage.app",
-	messagingSenderId: "851668219021",
-	appId: "1:851668219021:web:da67de784fd13188655ec4",
-	measurementId: "G-ZEVQ84F4B0",
+	apiKey: "AIzaSyDVMOTIrCVn8dMRMMeMHow5TtFLI0BF4lY",
+	authDomain: "onememe-a9e5c.firebaseapp.com",
+	projectId: "onememe-a9e5c",
+	storageBucket: "onememe-a9e5c.firebasestorage.app",
+	messagingSenderId: "458039086973",
+	appId: "1:458039086973:web:e0e24911e6d6f467dac614",
 };
 
 // Initialize Firebase
@@ -39,14 +38,13 @@ form.addEventListener("submit", (event) => {
 		.then((userCredential) => {
 			// Signed in
 			const user = userCredential.user;
-			sessionStorage.setItem("isGuestVisit", false);
 			localStorage.setItem("authenticatedUser", JSON.stringify(user));
 			location.href = "home.html";
 		})
 		.catch((error) => {
 			const errorCode = error.code;
 			const errorMessage = error.message;
-			alert(errorMessage);
+			alert(`Login Error - ${errorCode} - ${errorMessage}`);
 		});
 });
 
@@ -55,7 +53,6 @@ document.getElementById("signup-button").onclick = () => {
 };
 
 document.getElementById("guest-button").onclick = () => {
-	sessionStorage.setItem("isGuestVisit", true);
 	location.href = "home.html";
 };
 

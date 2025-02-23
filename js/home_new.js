@@ -27,13 +27,12 @@ import {
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-	apiKey: "AIzaSyBfBXlbUUWygLra3FdkbaMoX5PEaHAvxmg",
-	authDomain: "one-5769e.firebaseapp.com",
-	projectId: "one-5769e",
-	storageBucket: "one-5769e.firebasestorage.app",
-	messagingSenderId: "851668219021",
-	appId: "1:851668219021:web:da67de784fd13188655ec4",
-	measurementId: "G-ZEVQ84F4B0",
+	apiKey: "AIzaSyDVMOTIrCVn8dMRMMeMHow5TtFLI0BF4lY",
+	authDomain: "onememe-a9e5c.firebaseapp.com",
+	projectId: "onememe-a9e5c",
+	storageBucket: "onememe-a9e5c.firebasestorage.app",
+	messagingSenderId: "458039086973",
+	appId: "1:458039086973:web:e0e24911e6d6f467dac614",
 };
 
 // Initialize Firebase
@@ -44,7 +43,7 @@ const auth = getAuth(app);
 let user = "";
 
 // Firestore
-const firestore = getFirestore(app, "nineone");
+const firestore = getFirestore(app, "onememe");
 
 const pageSize = 7;
 let firstVisible = null;
