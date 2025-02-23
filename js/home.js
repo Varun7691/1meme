@@ -29,7 +29,7 @@ import {
 	ref,
 	uploadBytesResumable,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
-// import Gifa11y from './gifa11y.umd.js'
+import { firebaseConfig } from './app_secrets.js'
 
 window.onload = () => {
 	const profileLabel = document.getElementById("home-profile");
@@ -47,17 +47,6 @@ window.onload = () => {
 			signInLabel.style.display = "inline"; //https://stackoverflow.com/a/10857429
 		}
 	});
-};
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-	apiKey: "AIzaSyDVMOTIrCVn8dMRMMeMHow5TtFLI0BF4lY",
-	authDomain: "onememe-a9e5c.firebaseapp.com",
-	projectId: "onememe-a9e5c",
-	storageBucket: "onememe-a9e5c.firebasestorage.app",
-	messagingSenderId: "458039086973",
-	appId: "1:458039086973:web:e0e24911e6d6f467dac614",
 };
 
 // Initialize Firebase
