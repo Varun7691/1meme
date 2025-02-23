@@ -5,21 +5,9 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebas
 import {
 	getAuth,
 	sendPasswordResetEmail,
-	signInAnonymously,
 	signInWithEmailAndPassword,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-auth.js";
-
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-	apiKey: "AIzaSyBfBXlbUUWygLra3FdkbaMoX5PEaHAvxmg",
-	authDomain: "one-5769e.firebaseapp.com",
-	projectId: "one-5769e",
-	storageBucket: "one-5769e.firebasestorage.app",
-	messagingSenderId: "851668219021",
-	appId: "1:851668219021:web:da67de784fd13188655ec4",
-	measurementId: "G-ZEVQ84F4B0",
-};
+import { firebaseConfig } from './app_secrets.js'
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
