@@ -11,7 +11,7 @@ import {
 	getFirestore,
 	setDoc,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
-import { firebaseConfig } from './app_secrets.js'
+import { firebaseConfig } from "./app_secrets.js";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

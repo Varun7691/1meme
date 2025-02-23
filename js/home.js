@@ -29,8 +29,7 @@ import {
 	ref,
 	uploadBytesResumable,
 } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-storage.js";
-import { firebaseConfig } from './app_secrets.js'
-import { firebaseConfig } from './app_secrets.js'
+import { firebaseConfig } from "./app_secrets.js";
 
 window.onload = () => {
 	const profileLabel = document.getElementById("home-profile");
